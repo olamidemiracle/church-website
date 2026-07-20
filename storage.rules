@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // =========================================================================
+    // HELPER FUNCTIONS — mirrors firestore.rules
+    // =========================================================================
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function role() {
+      return request.auth.token.role;
+    }
+
+    function isEditor() {
+      return isSignedIn() && (role() == 'superadmin' || role() == 'editor');
+    }
+
+    // File size / type guards used across upload paths
+    function isReasonableImage() {
+      return request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    function isReasonableAudio() {
+      return request.resource.size < 200 * 1024 * 1024
+        && request.resource.contentType.matches('audio/.*');
+    }
+
+    function isReasonablePdf() {
+      return request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf';
+    }
+
+    // =========================================================================
+    // DEFAULT DENY
+    // =========================================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // PUBLIC ASSET PATHS — public read, editor-only write with basic validation
+    // =========================================================================
+    match /leadership/{staffId}/{fileName} {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /ministries/{ministryId}/{fileName} {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /events/{eventId}/{fileName} {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /sermons/{sermonId}/audio.mp3 {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableAudio();
+    }
+
+    match /sermons/{sermonId}/notes.pdf {
+      allow read: if true;
+      allow write: if isEditor() && isReasonablePdf();
+    }
+
+    match /sermons/{sermonId}/thumbnail.jpg {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /gallery/{albumId}/{imageId} {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /news/{newsId}/{fileName} {
+      allow read: if true;
+      allow write: if isEditor() && isReasonableImage();
+    }
+
+    match /testimonies/{testimonyId}/{fileName} {
+      // Public may upload their own testimony media on submission,
+      // but only editors can overwrite/delete afterward.
+      allow read: if true;
+      allow create: if isReasonableImage();
+      allow update, delete: if isEditor();
+    }
+
+    match /site-assets/{allPaths=**} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+  }
+}

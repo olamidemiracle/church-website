@@ -1,0 +1,146 @@
+/* ==========================================================================
+   DESIGN TOKENS
+   Single source of truth for color, type, spacing, breakpoints, radius,
+   and shadows. Every page and component should reference these variables —
+   never hardcode a raw hex/px value in page-level CSS.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOR — deliberately avoiding the generic "warm cream + terracotta"
+     AI-default palette. This system leans on a deep ink-blue as the
+     dominant tone (quiet, steady, legible for long-form scripture/sermon
+     text) with a warm brass accent used sparingly for action moments
+     (Give, Join, Submit) — evoking hymn-book gilt edges rather than a
+     generic "brand orange."
+     --------------------------------------------------------------------- */
+
+  /* Primary — Ink Blue: headers, nav, primary buttons, footer */
+  --color-primary-900: #0f1b2d;
+  --color-primary-700: #1c3352;
+  --color-primary-500: #2c4c73;
+  --color-primary-300: #6f8caa;
+  --color-primary-100: #dbe4ee;
+
+  /* Secondary — Slate: supporting UI, secondary buttons, borders on dark */
+  --color-secondary-700: #3d4652;
+  --color-secondary-500: #6b7480;
+  --color-secondary-300: #a9b0b8;
+
+  /* Accent — Brass: used sparingly for CTAs (Give, Join, Submit, links) */
+  --color-accent-700: #8a6a2f;
+  --color-accent-500: #b98f3f;
+  --color-accent-300: #e0c07f;
+
+  /* Neutrals — a cool paper tone, distinct from the common warm-cream default */
+  --color-bg: #f6f7f8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef1f4;
+  --color-border: #dde1e6;
+  --color-text-primary: #16202c;
+  --color-text-secondary: #4a5561;
+  --color-text-muted: #78828c;
+  --color-text-inverse: #f6f7f8;
+
+  /* Semantic */
+  --color-success: #2f7a4d;
+  --color-success-bg: #e7f4ec;
+  --color-error: #b3402f;
+  --color-error-bg: #fbe9e6;
+  --color-warning: #b98226;
+  --color-warning-bg: #fbf1de;
+  --color-info: var(--color-primary-500);
+  --color-info-bg: var(--color-primary-100);
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY
+     Display: "Fraunces" (a serif with real character/weight range — used
+       with restraint on headings only) paired with a clean humanist sans
+       "Inter" for body/UI text. A modular scale of 1.25 (major third).
+     --------------------------------------------------------------------- */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --font-scale-ratio: 1.25;
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-sm: 0.8rem;       /* 12.8px */
+  --font-size-md: 1rem;         /* 16px */
+  --font-size-lg: 1.25rem;      /* 20px */
+  --font-size-xl: 1.563rem;     /* ~25px */
+  --font-size-2xl: 1.953rem;    /* ~31px */
+  --font-size-3xl: 2.441rem;    /* ~39px */
+  --font-size-4xl: 3.052rem;    /* ~49px */
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ---------------------------------------------------------------------
+     SPACING — 4px base unit
+     --------------------------------------------------------------------- */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-7: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --space-9: 6rem;     /* 96px */
+
+  /* ---------------------------------------------------------------------
+     BREAKPOINTS (referenced in comments — CSS custom properties can't be
+     used inside @media queries directly, so these are the documented
+     values to use literally in media query declarations)
+     Mobile:  base styles (no media query)
+     sm:  480px
+     md:  768px
+     lg:  1024px
+     xl:  1280px
+     --------------------------------------------------------------------- */
+
+  /* ---------------------------------------------------------------------
+     RADIUS & SHADOW — card/button language
+     --------------------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(15, 27, 45, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 27, 45, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 27, 45, 0.12);
+
+  /* ---------------------------------------------------------------------
+     TRANSITIONS — consistent motion timing
+     --------------------------------------------------------------------- */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 320ms ease;
+
+  /* ---------------------------------------------------------------------
+     Z-INDEX SCALE — prevents ad hoc z-index wars across components
+     --------------------------------------------------------------------- */
+  --z-header: 100;
+  --z-mobile-nav: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* ---------------------------------------------------------------------
+   Reduced motion — respected site-wide per component, not just here.
+   Components that add transitions/animations should also check this.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+}

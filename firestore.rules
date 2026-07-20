@@ -1,0 +1,158 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // HELPER FUNCTIONS
+    // Custom claims (role: "superadmin" | "editor") are set server-side via
+    // a Cloud Function (functions/setUserRole.js) — never set by the client.
+    // =========================================================================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function role() {
+      return request.auth.token.role;
+    }
+
+    function isAdmin() {
+      // superadmin: full access, including settings/users/donations
+      return isSignedIn() && role() == 'superadmin';
+    }
+
+    function isEditor() {
+      // editor: content management only (no settings, users, or donations)
+      return isSignedIn() && (role() == 'superadmin' || role() == 'editor');
+    }
+
+    // =========================================================================
+    // DEFAULT DENY
+    // Nothing is readable or writable unless explicitly opened below.
+    // =========================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // PUBLIC READ-ONLY CONTENT
+    // Content collections: public can read, only editors/admins can write.
+    // =========================================================================
+    match /leadership/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /ministries/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /events/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+
+      // RSVP subcollection: public can create their own RSVP, only admins read/manage
+      match /rsvps/{rsvpId} {
+        allow create: if true;
+        allow read, update, delete: if isEditor();
+      }
+    }
+
+    match /sermons/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /galleryAlbums/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+
+      match /images/{imageId} {
+        allow read: if true;
+        allow write: if isEditor();
+      }
+    }
+
+    match /news/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /devotionals/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /faqs/{docId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    // Testimonies: public can only read APPROVED ones; submissions go through
+    // the create rule below. Status changes are editor-only.
+    match /testimonies/{docId} {
+      allow read: if resource.data.status == 'approved' || isEditor();
+      allow create: if true; // public submission, defaults to status: "pending" client-side
+      allow update, delete: if isEditor();
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin(); // settings is admin-only, not editor
+    }
+
+    // =========================================================================
+    // PUBLIC SUBMISSION COLLECTIONS
+    // Public can CREATE (submit a form) but never read/update/delete others'
+    // submissions. Only admins/editors can manage them afterward.
+    // =========================================================================
+    match /prayerRequests/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isEditor();
+    }
+
+    match /membershipApplications/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isEditor();
+    }
+
+    match /visitorSubmissions/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isEditor();
+    }
+
+    match /contactMessages/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isEditor();
+    }
+
+    match /newsletterSubscribers/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // ADMIN-ONLY COLLECTIONS
+    // Never writable by the client SDK for donations/activityLogs in the long
+    // run (Cloud Functions should own writes there) — client read access only
+    // for admins, and only superadmins for users/activityLogs.
+    // =========================================================================
+    match /donations/{docId} {
+      allow read: if isAdmin();
+      allow write: if false; // written only by Cloud Function (Paystack webhook)
+    }
+
+    match /users/{docId} {
+      allow read: if isAdmin();
+      allow write: if false; // written only by Cloud Function (setUserRole)
+    }
+
+    match /activityLogs/{docId} {
+      allow read: if isAdmin();
+      allow create: if isEditor(); // any admin action can log itself
+      allow update, delete: if false; // logs are append-only, never edited/deleted by clients
+    }
+  }
+}

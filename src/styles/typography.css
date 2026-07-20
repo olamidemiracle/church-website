@@ -1,0 +1,68 @@
+/* ==========================================================================
+   TYPOGRAPHY — applies the type tokens from variables.css to base elements.
+   Page-level CSS should rarely need to redeclare font-family/size; compose
+   from these base rules and utility classes instead.
+   ========================================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-primary-900);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+}
+h2 {
+  font-size: var(--font-size-3xl);
+}
+h3 {
+  font-size: var(--font-size-2xl);
+}
+h4 {
+  font-size: var(--font-size-xl);
+}
+
+p {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+small,
+.text-sm {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+a {
+  color: var(--color-primary-500);
+  transition: color var(--transition-fast);
+}
+a:hover {
+  color: var(--color-accent-700);
+}
+
+/* Utility classes for one-off overrides — prefer these over inline styles */
+.font-display {
+  font-family: var(--font-display);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-accent {
+  color: var(--color-accent-700);
+}

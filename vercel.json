@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
+  ]
+}
