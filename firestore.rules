@@ -75,8 +75,10 @@ service cloud.firestore {
       }
     }
 
+    // Public can only read published articles; editors can read/write all
+    // (including drafts) for the admin dashboard's Manage News page.
     match /news/{docId} {
-      allow read: if true;
+      allow read: if resource.data.isPublished == true || isEditor();
       allow write: if isEditor();
     }
 

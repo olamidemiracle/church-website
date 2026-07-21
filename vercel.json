@@ -18,6 +18,14 @@
     { "source": "/location", "destination": "/src/pages/location/index.html" },
     { "source": "/privacy-policy", "destination": "/src/pages/privacy-policy/index.html" },
     { "source": "/terms", "destination": "/src/pages/terms/index.html" },
+    { "source": "/sermons", "destination": "/src/pages/sermons/index.html" },
+    { "source": "/sermons/detail", "destination": "/src/pages/sermons/detail/index.html" },
+    { "source": "/events", "destination": "/src/pages/events/index.html" },
+    { "source": "/events/detail", "destination": "/src/pages/events/detail/index.html" },
+    { "source": "/gallery", "destination": "/src/pages/gallery/index.html" },
+    { "source": "/gallery/album", "destination": "/src/pages/gallery/album/index.html" },
+    { "source": "/news", "destination": "/src/pages/news/index.html" },
+    { "source": "/news/detail", "destination": "/src/pages/news/detail/index.html" },
     { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
   ]
 }

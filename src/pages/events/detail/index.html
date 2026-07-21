@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Event</title>
+    <meta name="description" id="page-description" content="Event details." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/events/detail/detail.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <div id="event-detail-content" aria-live="polite">
+        <section class="section">
+          <div class="container">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading event"></div>
+              Loading event…
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/events/detail/detail.js"></script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <meta
+      name="description"
+      content="Photos from church life — services, events, and community moments."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Gallery</h1>
+          <p>Moments from our church family, captured along the way.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div id="albums-list" class="card-grid card-grid--3" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading albums"></div>
+              Loading albums…
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/gallery/gallery.js"></script>
+  </body>
+</html>

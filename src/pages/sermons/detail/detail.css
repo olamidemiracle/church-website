@@ -1,0 +1,22 @@
+/* Sermon Detail page */
+
+.sermon-detail__body {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.sermon-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.sermon-detail__downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}

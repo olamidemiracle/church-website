@@ -9,8 +9,9 @@
  *   renderInto('#site-header', renderHeader());
  *   initHeader();
  *
- * Nav scope is intentionally limited to Phase 2 pages that exist today.
- * Sermons, Events, Give, etc. will be added here once those phases ship.
+ * Nav scope reflects pages that exist today (Phases 1-3). Give/Donate,
+ * Livestream, Prayer Request, Membership, etc. will be added here once
+ * those phases ship.
  * -----------------------------------------------------------------------
  */
 
@@ -28,6 +29,10 @@ const NAV_ITEMS = [
     ],
   },
   { label: 'Ministries', href: '/ministries' },
+  { label: 'Sermons', href: '/sermons' },
+  { label: 'Events', href: '/events' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'News', href: '/news' },
   { label: 'Service Times', href: '/service-times' },
   { label: 'Contact', href: '/contact' },
 ];

@@ -1,0 +1,20 @@
+/* News Detail page */
+
+.news-detail__image {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+.news-detail__body {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.news-detail__meta {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-5);
+}

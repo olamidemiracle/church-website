@@ -1,0 +1,6 @@
+/* Sermons page — sermon card date/speaker badges */
+
+.sermon-card__date {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

@@ -24,6 +24,7 @@ const {
   where,
   orderBy,
   limit: fsLimit,
+  startAfter,
   addDoc,
   serverTimestamp,
 } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
@@ -80,6 +81,97 @@ export async function getDocumentByField(collectionName, field, value) {
     return { id: d.id, ...d.data() };
   } catch (error) {
     console.error(`[firestore] getDocumentByField(${collectionName}.${field}) failed:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Cursor-paginated version of getCollectionList, used by "Load More" UIs
+ * (Sermons, News). Pass the previous call's `lastDoc` back in as
+ * `startAfterDoc` to fetch the next page.
+ *
+ * Returns { items, lastDoc, hasMore } — `lastDoc` is an opaque Firestore
+ * document snapshot to pass back into the next call, not meant to be
+ * rendered directly.
+ */
+export async function getCollectionPage(collectionName, options = {}) {
+  const {
+    orderByField,
+    orderDirection = 'desc',
+    pageSize = 12,
+    where: whereClauses = [],
+    startAfterDoc = null,
+  } = options;
+
+  try {
+    const constraints = whereClauses.map(([field, op, value]) => where(field, op, value));
+    if (orderByField) {
+      constraints.push(orderBy(orderByField, orderDirection));
+    }
+    if (startAfterDoc) {
+      constraints.push(startAfter(startAfterDoc));
+    }
+    constraints.push(fsLimit(pageSize));
+
+    const q = query(collection(db, collectionName), ...constraints);
+    const snap = await getDocs(q);
+    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const lastDoc = snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
+
+    return { items, lastDoc, hasMore: snap.docs.length === pageSize };
+  } catch (error) {
+    console.error(`[firestore] getCollectionPage(${collectionName}) failed:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches all documents in a subcollection (e.g. galleryAlbums/{id}/images,
+ * events/{id}/rsvps).
+ */
+export async function getSubcollectionList(
+  parentCollection,
+  parentId,
+  subcollectionName,
+  options = {}
+) {
+  const { orderByField, orderDirection = 'asc' } = options;
+
+  try {
+    const constraints = [];
+    if (orderByField) {
+      constraints.push(orderBy(orderByField, orderDirection));
+    }
+    const q = query(collection(db, parentCollection, parentId, subcollectionName), ...constraints);
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  } catch (error) {
+    console.error(
+      `[firestore] getSubcollectionList(${parentCollection}/${parentId}/${subcollectionName}) failed:`,
+      error
+    );
+    throw error;
+  }
+}
+
+/** Creates a document inside a subcollection (e.g. an Event RSVP). */
+export async function createSubcollectionDocument(
+  parentCollection,
+  parentId,
+  subcollectionName,
+  data
+) {
+  try {
+    const ref = await addDoc(collection(db, parentCollection, parentId, subcollectionName), {
+      ...data,
+      submittedAt: serverTimestamp(),
+    });
+    return ref.id;
+  } catch (error) {
+    console.error(
+      `[firestore] createSubcollectionDocument(${parentCollection}/${parentId}/${subcollectionName}) failed:`,
+      error
+    );
     throw error;
   }
 }

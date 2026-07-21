@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events</title>
+    <meta name="description" content="See what's happening — upcoming events at our church." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/events/events.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Events</h1>
+          <p>There's always something happening — come be part of it.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <form id="events-filter-bar" class="filter-bar">
+            <div class="filter-bar__field">
+              <label class="filter-bar__label" for="filter-timeframe">Show</label>
+              <select id="filter-timeframe" name="timeframe">
+                <option value="upcoming">Upcoming Events</option>
+                <option value="past">Past Events</option>
+                <option value="all">All Events</option>
+              </select>
+            </div>
+            <div class="filter-bar__field">
+              <label class="filter-bar__label" for="filter-category">Category</label>
+              <select id="filter-category" name="category">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+          </form>
+
+          <div id="events-list" class="card-grid card-grid--3" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading events"></div>
+              Loading events…
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/events/events.js"></script>
+  </body>
+</html>

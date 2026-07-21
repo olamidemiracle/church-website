@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sermons</title>
+    <meta name="description" content="Watch, listen, or read our latest sermons and messages." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/sermons/sermons.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Sermons</h1>
+          <p>Catch up on past messages — watch, listen, or read along.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <form id="sermons-filter-bar" class="filter-bar" role="search">
+            <div class="filter-bar__field">
+              <label class="filter-bar__label" for="filter-search">Search</label>
+              <input
+                type="search"
+                id="filter-search"
+                name="search"
+                placeholder="Search by title…"
+              />
+            </div>
+            <div class="filter-bar__field">
+              <label class="filter-bar__label" for="filter-speaker">Speaker</label>
+              <select id="filter-speaker" name="speaker">
+                <option value="">All Speakers</option>
+              </select>
+            </div>
+            <div class="filter-bar__field">
+              <label class="filter-bar__label" for="filter-series">Series</label>
+              <select id="filter-series" name="series">
+                <option value="">All Series</option>
+              </select>
+            </div>
+          </form>
+
+          <div id="sermons-list" class="card-grid card-grid--3" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading sermons"></div>
+              Loading sermons…
+            </div>
+          </div>
+
+          <div class="load-more-wrap" id="load-more-wrap" hidden>
+            <button type="button" class="btn btn-outline" id="load-more-btn">
+              Load More Sermons
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/sermons/sermons.js"></script>
+  </body>
+</html>

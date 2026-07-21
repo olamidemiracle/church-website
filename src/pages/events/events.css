@@ -1,0 +1,30 @@
+/* Events page — date badge on event cards */
+
+.event-card__date-badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  background-color: var(--color-surface);
+  color: var(--color-primary-900);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  line-height: 1.1;
+}
+.event-card__date-badge .month {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-700);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+}
+.event-card__date-badge .day {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+}
+
+.entity-card--event {
+  position: relative;
+}
