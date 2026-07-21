@@ -6,6 +6,7 @@
 @import './reset.css';
 @import './variables.css';
 @import './typography.css';
+@import './components.css';
 
 /* ---------------------------------------------------------------------
    Layout primitives — shared across pages

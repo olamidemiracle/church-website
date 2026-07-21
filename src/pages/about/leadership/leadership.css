@@ -1,0 +1,21 @@
+/* Leadership page — staff card portrait styling */
+
+.staff-card__image {
+  aspect-ratio: 1 / 1;
+}
+
+.staff-card__title {
+  color: var(--color-accent-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.staff-card__socials {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+.staff-card__socials a {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-500);
+}

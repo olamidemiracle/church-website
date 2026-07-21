@@ -2,6 +2,22 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/", "destination": "/src/pages/home/index.html" },
+    { "source": "/about", "destination": "/src/pages/about/index.html" },
+    { "source": "/about/history", "destination": "/src/pages/about/history/index.html" },
+    {
+      "source": "/about/vision-mission",
+      "destination": "/src/pages/about/vision-mission/index.html"
+    },
+    { "source": "/about/beliefs", "destination": "/src/pages/about/beliefs/index.html" },
+    { "source": "/about/leadership", "destination": "/src/pages/about/leadership/index.html" },
+    { "source": "/ministries", "destination": "/src/pages/ministries/index.html" },
+    { "source": "/ministries/detail", "destination": "/src/pages/ministries/detail/index.html" },
+    { "source": "/service-times", "destination": "/src/pages/service-times/index.html" },
+    { "source": "/contact", "destination": "/src/pages/contact/index.html" },
+    { "source": "/location", "destination": "/src/pages/location/index.html" },
+    { "source": "/privacy-policy", "destination": "/src/pages/privacy-policy/index.html" },
+    { "source": "/terms", "destination": "/src/pages/terms/index.html" },
     { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
   ]
 }

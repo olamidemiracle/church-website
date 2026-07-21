@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Church</title>
+    <meta
+      name="description"
+      content="Learn who we are, what we believe, and who leads our church family."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">About Our Church</h1>
+          <p>Our story, our convictions, and the people who lead us.</p>
+        </div>
+      </section>
+
+      <div id="about-subnav"></div>
+
+      <section class="section">
+        <div class="container card-grid">
+          <a class="card entity-card" href="/about/history">
+            <div class="entity-card__body">
+              <h3 class="entity-card__title">Our History</h3>
+              <p class="entity-card__desc">
+                How our church began, and the milestones that have shaped our journey.
+              </p>
+              <span class="entity-card__link">Read our story →</span>
+            </div>
+          </a>
+
+          <a class="card entity-card" href="/about/vision-mission">
+            <div class="entity-card__body">
+              <h3 class="entity-card__title">Vision &amp; Mission</h3>
+              <p class="entity-card__desc">
+                What we're working toward, and why we exist as a church family.
+              </p>
+              <span class="entity-card__link">See our vision →</span>
+            </div>
+          </a>
+
+          <a class="card entity-card" href="/about/beliefs">
+            <div class="entity-card__body">
+              <h3 class="entity-card__title">Statement of Faith</h3>
+              <p class="entity-card__desc">
+                The core convictions of Scripture that shape everything we teach and do.
+              </p>
+              <span class="entity-card__link">See what we believe →</span>
+            </div>
+          </a>
+
+          <a class="card entity-card" href="/about/leadership">
+            <div class="entity-card__body">
+              <h3 class="entity-card__title">Leadership</h3>
+              <p class="entity-card__desc">
+                Meet the pastors, ministers, and elders who shepherd our congregation.
+              </p>
+              <span class="entity-card__link">Meet our leaders →</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/about/about.js"></script>
+  </body>
+</html>

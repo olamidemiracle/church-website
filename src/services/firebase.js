@@ -2,48 +2,42 @@
  * services/firebase.js
  * -----------------------------------------------------------------------
  * Single source of truth for Firebase initialization. Every other service
- * (auth.service.js, firestore.service.js, storage.service.js) imports its
+ * (firestore.service.js, emailjs.service.js's siblings, etc.) imports its
  * instance from HERE — nowhere else should call initializeApp().
  *
- * Config values come from environment variables (see .env.example). This
- * file assumes a build/dev step injects them (e.g. via Vercel env vars or
- * a small script that writes them onto `window.__ENV__` for static HTML
- * pages without a bundler). Adjust the `getEnv()` helper below once the
- * build tooling is decided in a later phase — the rest of the app only
- * ever imports { app, auth, db, storage } from this file, so that swap
- * is isolated to one place.
+ * IMPORTANT — no bundler yet: this project currently ships plain
+ * `<script type="module">` pages with no build step (per the Phase 2
+ * architecture). Bare specifiers like `firebase/app` only resolve with a
+ * bundler (Vite/Webpack/etc.), so we import the Firebase SDK directly
+ * from Google's official CDN as ES modules instead. If a bundler is
+ * introduced later, swap these three import lines for the npm package
+ * equivalents ('firebase/app', 'firebase/auth', ...) — every other file
+ * that imports { app, auth, db, storage } from this module is unaffected.
+ *
+ * Config values come from environment variables (see .env.example),
+ * resolved via utils/env.js (import.meta.env or window.__ENV__).
  * -----------------------------------------------------------------------
  */
 
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { getEnv } from '../utils/env.js';
 
-/**
- * Reads a config value from the environment. Centralized so the *source*
- * of env vars (bundler define, window global, etc.) can change later
- * without touching every call site.
- */
-function getEnv(key) {
-  // Placeholder resolution order — finalize once the build tool is chosen:
-  // 1) import.meta.env (Vite-style)  2) window.__ENV__ (static HTML fallback)
-  const fromImportMeta =
-    typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env[key] : undefined;
-  const fromWindow =
-    typeof window !== 'undefined' && window.__ENV__ ? window.__ENV__[key] : undefined;
+const FIREBASE_SDK_VERSION = '10.12.5';
 
-  const value = fromImportMeta ?? fromWindow;
-
-  if (!value) {
-    // Fail loudly in development rather than silently connecting to nothing.
-    // eslint-disable-next-line no-console
-    console.error(`[firebase] Missing required env var: ${key}`);
-  }
-
-  return value;
-}
+const { initializeApp, getApps, getApp } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`
+);
+const { getAuth } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-auth.js`
+);
+const { getFirestore } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`
+);
+const { getStorage } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-storage.js`
+);
+const { initializeAppCheck, ReCaptchaV3Provider } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app-check.js`
+);
 
 const firebaseConfig = {
   apiKey: getEnv('FIREBASE_API_KEY'),

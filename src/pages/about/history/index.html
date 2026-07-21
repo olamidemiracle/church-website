@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our History</title>
+    <meta
+      name="description"
+      content="The story of how our church began and the milestones along the way."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/about/history/history.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Our History</h1>
+          <p>How God has led us, one season at a time.</p>
+        </div>
+      </section>
+
+      <div id="about-subnav"></div>
+
+      <section class="section">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/about">About</a>
+            <span class="breadcrumbs__sep">/</span>
+            <span aria-current="page">Our History</span>
+          </nav>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__year">Founding</span>
+              <div class="timeline__content">
+                <h3>A Small Beginning</h3>
+                <p>
+                  Our church began with a handful of families meeting together in prayer, trusting
+                  God for something bigger than themselves — a home for anyone seeking Him.
+                </p>
+              </div>
+            </li>
+            <li class="timeline__item">
+              <span class="timeline__year">Growth</span>
+              <div class="timeline__content">
+                <h3>Finding a Home</h3>
+                <p>
+                  As the congregation grew, so did our vision for ministry — new services, new
+                  ministries, and a growing family across every generation.
+                </p>
+              </div>
+            </li>
+            <li class="timeline__item">
+              <span class="timeline__year">Today</span>
+              <div class="timeline__content">
+                <h3>Continuing the Story</h3>
+                <p>
+                  Today, we continue to grow as a community devoted to worship, discipleship, and
+                  serving those around us — and the story is still being written.
+                </p>
+              </div>
+            </li>
+          </ol>
+
+          <p class="text-sm" style="margin-top: var(--space-6); text-align: center">
+            Content editable by church admin — replace with your church's real founding story,
+            dates, and milestones.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/about/history/history.js"></script>
+  </body>
+</html>

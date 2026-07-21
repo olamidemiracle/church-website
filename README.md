@@ -25,6 +25,27 @@ functions/       — Firebase Cloud Functions (role assignment, donation webhook
 
 Full page/collection/folder inventory lives in the project plan document (`church-website-project-plan.md`).
 
+## Environment Variables in the Browser
+
+This project has no bundler/build step yet, so environment variables can't be
+injected at compile time. Instead, `api/env.js` (a Vercel Serverless Function)
+reads Vercel's environment variables at request time and returns a small script
+that sets `window.__ENV__` — every public page loads this in its `<head>`
+_before_ its own page script:
+
+```html
+<script src="/api/env.js"></script>
+```
+
+`src/utils/env.js`'s `getEnv()` reads from `window.__ENV__` (or `import.meta.env`,
+if a bundler is introduced later). Only variables safe for the browser are
+exposed this way — see the `PUBLIC_ENV_KEYS` allow-list inside `api/env.js`.
+**`PAYSTACK_SECRET_KEY` must never be added to that list.**
+
+For local development without Vercel's dev server, you can stub this by adding a
+plain `<script>window.__ENV__ = { FIREBASE_API_KEY: '...', ... };</script>`
+tag temporarily, or run `vercel dev` (which serves `/api/env.js` for real).
+
 ## Local Setup
 
 1. Install dependencies:
@@ -54,14 +75,17 @@ All color, type, spacing, breakpoint, radius, and shadow values are defined once
 ## Security Rules
 
 `firestore.rules` and `storage.rules` default-deny everything, then explicitly open:
+
 - Public read on content collections (sermons, events, ministries, etc.)
 - Public create-only on submission collections (prayer requests, membership applications, contact messages, etc.)
 - Editor/superadmin-only write access elsewhere, enforced via Firebase Auth custom claims (`role`)
 
 Deploy rules with:
+
 ```
 firebase deploy --only firestore:rules,storage:rules
 ```
+
 (after completing the Firebase CLI login step in `SETUP_GUIDE.md`).
 
 ## Next Steps

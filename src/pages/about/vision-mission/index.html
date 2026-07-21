@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vision &amp; Mission</title>
+    <meta
+      name="description"
+      content="What we're working toward, and why we exist as a church family."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Vision &amp; Mission</h1>
+          <p>Why we exist, and where we're headed together.</p>
+        </div>
+      </section>
+
+      <div id="about-subnav"></div>
+
+      <section class="section">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/about">About</a>
+            <span class="breadcrumbs__sep">/</span>
+            <span aria-current="page">Vision &amp; Mission</span>
+          </nav>
+
+          <div class="card-grid" style="margin-bottom: var(--space-7)">
+            <div class="card">
+              <h2 class="font-display" style="color: var(--color-accent-700)">Our Mission</h2>
+              <p>
+                To help every person know God, grow in faith, and live out that faith in genuine
+                community — reaching our city and beyond with the love of Christ.
+              </p>
+            </div>
+            <div class="card">
+              <h2 class="font-display" style="color: var(--color-accent-700)">Our Vision</h2>
+              <p>
+                A church where every generation finds a home — a place of authentic worship, deep
+                discipleship, and outward-facing love that transforms our community.
+              </p>
+            </div>
+          </div>
+
+          <h2 style="text-align: center; margin-bottom: var(--space-5)">Our Core Values</h2>
+          <div class="card-grid card-grid--3">
+            <div class="card">
+              <h3>Worship</h3>
+              <p class="text-sm">We exist to bring glory to God in everything we do.</p>
+            </div>
+            <div class="card">
+              <h3>Community</h3>
+              <p class="text-sm">We grow best when we walk through life together.</p>
+            </div>
+            <div class="card">
+              <h3>Service</h3>
+              <p class="text-sm">We believe faith is proven by how we serve others.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/about/vision-mission/vision-mission.js"></script>
+  </body>
+</html>

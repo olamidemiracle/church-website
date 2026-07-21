@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Times</title>
+    <meta
+      name="description"
+      content="Join us for worship — see our full weekly service schedule."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/service-times/service-times.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Service Times</h1>
+          <p>We'd love to worship alongside you this week.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div id="service-times-list" class="service-list" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading service times"></div>
+              Loading service times…
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background-color: var(--color-surface-alt)">
+        <div class="container" style="text-align: center; max-width: 700px; margin: 0 auto">
+          <h2>What to Expect</h2>
+          <p>
+            Come as you are — casual or dressed up, it's entirely up to you. Services include
+            worship through music, a message from Scripture, and time to connect with others. Arrive
+            a little early and our welcome team will be glad to help you find your way around.
+          </p>
+          <a href="/visit" class="btn btn-primary" style="margin-top: var(--space-4)">
+            First Time Visiting?
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/service-times/service-times.js"></script>
+  </body>
+</html>

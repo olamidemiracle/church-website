@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <meta name="description" content="Welcome home. Join us for worship, community, and growth." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/home/home.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container">
+          <span class="hero__eyebrow">Welcome Home</span>
+          <h1 class="hero__title" id="hero-title">A Place to Belong</h1>
+          <p class="hero__subtitle">
+            Whoever you are and wherever you're coming from, there's a seat for you here. Join us
+            for worship, community, and a faith that grows with you.
+          </p>
+          <div class="hero__actions">
+            <a href="/service-times" class="btn btn-accent">Service Times</a>
+            <a
+              href="/visit"
+              class="btn btn-outline"
+              style="border-color: var(--color-text-inverse); color: var(--color-text-inverse)"
+            >
+              Plan Your Visit
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Service times snapshot -->
+      <section class="section">
+        <div class="container">
+          <h2 style="text-align: center; margin-bottom: var(--space-6)">Join Us This Week</h2>
+          <div id="service-times-snapshot" class="service-snapshot" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading service times"></div>
+              Loading service times…
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About preview -->
+      <section class="section" style="background-color: var(--color-surface-alt)">
+        <div class="container about-preview">
+          <div class="about-preview__text">
+            <h2>Who We Are</h2>
+            <p>
+              We're a community of ordinary people brought together by an extraordinary faith.
+              Rooted in Scripture and shaped by grace, we exist to help every person know God, grow
+              in character, and find a place to belong.
+            </p>
+            <a href="/about" class="btn btn-primary">Learn Our Story</a>
+          </div>
+          <div class="about-preview__stats">
+            <div class="card">
+              <p
+                class="font-display"
+                style="font-size: var(--font-size-3xl); color: var(--color-accent-700)"
+              >
+                What We Believe
+              </p>
+              <p class="text-sm">
+                Read our Statement of Faith and the convictions that shape everything we do.
+              </p>
+              <a href="/about/beliefs" class="entity-card__link">See our beliefs →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ministries preview -->
+      <section class="section">
+        <div class="container">
+          <h2 style="text-align: center; margin-bottom: var(--space-2)">Find Your Place</h2>
+          <p style="text-align: center; max-width: 60ch; margin: 0 auto var(--space-6)">
+            From kids to seniors, there's a ministry here for every season of life.
+          </p>
+          <div id="ministries-preview" class="card-grid card-grid--3" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading ministries"></div>
+              Loading ministries…
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: var(--space-6)">
+            <a href="/ministries" class="btn btn-outline">View All Ministries</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section cta-band">
+        <div class="container cta-band__inner">
+          <h2 style="color: var(--color-text-inverse)">New Here? We'd Love to Meet You.</h2>
+          <p
+            style="
+              color: var(--color-primary-100);
+              max-width: 50ch;
+              margin: var(--space-3) auto var(--space-5);
+            "
+          >
+            Let us know you're coming, and someone will be there to welcome you personally.
+          </p>
+          <a href="/visit" class="btn btn-accent">Plan Your Visit</a>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/home/home.js"></script>
+  </body>
+</html>

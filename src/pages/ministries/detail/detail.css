@@ -1,0 +1,29 @@
+/* Ministry Detail page — hero image + content layout */
+
+.ministry-detail__image {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+.ministry-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.ministry-detail__meta-item {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-700);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.ministry-detail__body {
+  max-width: 760px;
+  margin: 0 auto;
+}

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location &amp; Directions</title>
+    <meta
+      name="description"
+      content="Find us — directions, parking, and what to expect when you arrive."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/location/location.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Location &amp; Directions</h1>
+          <p>We can't wait to welcome you in person.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container location-grid">
+          <div class="location-map" id="location-map">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading map"></div>
+              Loading map…
+            </div>
+          </div>
+
+          <div class="card location-details" id="location-details">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading address"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background-color: var(--color-surface-alt)">
+        <div class="container" style="max-width: 700px; margin: 0 auto; text-align: center">
+          <h2>Getting Here</h2>
+          <p>
+            Free parking is available on-site, with our welcome team on hand to direct you. If you
+            use a ride-share or public transit, our address above will bring you right to our main
+            entrance.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/location/location.js"></script>
+  </body>
+</html>

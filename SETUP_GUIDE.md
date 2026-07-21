@@ -168,7 +168,7 @@ once for each.
 
 ### B.3 — Register a "web app" inside the staging project
 
-1. On the dashboard, look for a small icon that looks like `</>`  — it's usually in
+1. On the dashboard, look for a small icon that looks like `</>` — it's usually in
    the middle of the page under "Get started by adding Firebase to your app." Click
    it.
 2. Type a nickname: `Church Website Web`
@@ -250,6 +250,7 @@ once for each.
 ### B.9 — Repeat everything in Part B for your SECOND (production) project
 
 Go all the way back to step B.2 and do steps B.2 through B.8 again, but this time:
+
 - Name the project `church-website-prod` instead.
 - Write down its config values with the same labels as before, but keep them in a
   **separate list** clearly marked "PRODUCTION" so you never mix them up with
@@ -333,7 +334,7 @@ putting the codes directly into files anyone could see.
      **Development**.
 3. **For your PRODUCTION Firebase values:** check only the **Production** box, then
    click **Add**.
-4. **For your STAGING Firebase values:** using the *same key names* again (e.g.
+4. **For your STAGING Firebase values:** using the _same key names_ again (e.g.
    `FIREBASE_API_KEY` a second time), check only the **Preview** and **Development**
    boxes, then click **Add**.
 5. Repeat this for every value: `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`,

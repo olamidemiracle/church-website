@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statement of Faith</title>
+    <meta
+      name="description"
+      content="The core convictions of Scripture that shape everything we teach and do."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/about/beliefs/beliefs.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Statement of Faith</h1>
+          <p>What we believe, in plain terms.</p>
+        </div>
+      </section>
+
+      <div id="about-subnav"></div>
+
+      <section class="section">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/about">About</a>
+            <span class="breadcrumbs__sep">/</span>
+            <span aria-current="page">Statement of Faith</span>
+          </nav>
+
+          <dl class="belief-list">
+            <div class="belief-item">
+              <dt>The Scriptures</dt>
+              <dd>
+                We believe the Bible is God's inspired Word — fully true and our final authority for
+                faith and life.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>God</dt>
+              <dd>
+                We believe in one God, eternally existing in three persons: Father, Son, and Holy
+                Spirit.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>Jesus Christ</dt>
+              <dd>
+                We believe Jesus Christ is fully God and fully man, who died for our sins and rose
+                bodily from the dead.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>Salvation</dt>
+              <dd>
+                We believe salvation is a gift of God's grace, received through faith in Jesus
+                Christ alone.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>The Holy Spirit</dt>
+              <dd>
+                We believe the Holy Spirit indwells every believer, empowering a life that reflects
+                Christ.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>The Church</dt>
+              <dd>
+                We believe the Church is God's family on earth, called to worship, disciple, and
+                serve together.
+              </dd>
+            </div>
+            <div class="belief-item">
+              <dt>Eternity</dt>
+              <dd>
+                We believe in the bodily return of Christ and the eternal life promised to all who
+                believe in Him.
+              </dd>
+            </div>
+          </dl>
+
+          <p class="text-sm" style="margin-top: var(--space-6); text-align: center">
+            Content editable by church admin — replace with your church or denomination's full
+            doctrinal statement.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/about/beliefs/beliefs.js"></script>
+  </body>
+</html>
