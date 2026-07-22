@@ -26,6 +26,10 @@
     { "source": "/gallery/album", "destination": "/src/pages/gallery/album/index.html" },
     { "source": "/news", "destination": "/src/pages/news/index.html" },
     { "source": "/news/detail", "destination": "/src/pages/news/detail/index.html" },
+    { "source": "/prayer-request", "destination": "/src/pages/prayer-request/index.html" },
+    { "source": "/membership", "destination": "/src/pages/membership/index.html" },
+    { "source": "/visit", "destination": "/src/pages/visit/index.html" },
+    { "source": "/testimonies", "destination": "/src/pages/testimonies/index.html" },
     { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
   ]
 }

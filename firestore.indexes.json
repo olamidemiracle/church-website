@@ -7,6 +7,14 @@
         { "fieldPath": "isPublished", "order": "ASCENDING" },
         { "fieldPath": "publishDate", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "testimonies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "submittedAt", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

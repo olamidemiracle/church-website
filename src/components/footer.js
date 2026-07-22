@@ -48,6 +48,8 @@ export function renderFooter(settings = {}) {
             <li><a href="/contact">Contact Us</a></li>
             <li><a href="/location">Location &amp; Directions</a></li>
             <li><a href="/prayer-request">Prayer Request</a></li>
+            <li><a href="/membership">Membership</a></li>
+            <li><a href="/testimonies">Testimonies</a></li>
           </ul>
         </div>
 

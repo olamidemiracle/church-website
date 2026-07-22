@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testimonies</title>
+    <meta
+      name="description"
+      content="Real stories of what God is doing in the lives of our church family."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/testimonies/testimonies.css" />
+
+    <!-- EmailJS SDK — used only for a best-effort staff notification email;
+       the form's real source of truth is the Firestore write. -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Testimonies</h1>
+          <p>Real stories of what God is doing in the lives of our church family.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div id="testimonies-list" class="card-grid card-grid--3" aria-live="polite">
+            <div class="state-message">
+              <div class="state-spinner" role="status" aria-label="Loading testimonies"></div>
+              Loading testimonies…
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background-color: var(--color-surface-alt)">
+        <div class="container form-page-wrap">
+          <h2 style="text-align: center; margin-bottom: var(--space-2)">Share Your Story</h2>
+          <p style="text-align: center; margin-bottom: var(--space-6)">
+            Has God done something meaningful in your life? We'd love to hear it — and, with your
+            permission, share it to encourage others.
+          </p>
+
+          <div class="card">
+            <div id="testimony-form-status"></div>
+
+            <form id="testimony-form" novalidate>
+              <div class="form-field">
+                <label class="form-label" for="testimony-name">Your Name</label>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="testimony-name"
+                  name="name"
+                  autocomplete="name"
+                  required
+                />
+                <span class="form-error-text" id="testimony-name-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="testimony-title">Give Your Story a Title</label>
+                <input class="form-input" type="text" id="testimony-title" name="title" required />
+                <span class="form-error-text" id="testimony-title-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="testimony-body">Your Story</label>
+                <textarea class="form-textarea" id="testimony-body" name="body" required></textarea>
+                <span class="form-error-text" id="testimony-body-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="testimony-consent" name="consent" required />
+                  I give permission for this testimony to be reviewed and published on this website.
+                </label>
+                <span class="form-error-text" id="testimony-consent-error"></span>
+              </div>
+
+              <!-- Honeypot: hidden from real users, often filled in by bots -->
+              <div class="form-honeypot" aria-hidden="true">
+                <label for="testimony-website">Leave this field empty</label>
+                <input
+                  type="text"
+                  id="testimony-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="testimony-submit-btn">
+                Submit Your Testimony
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/testimonies/testimonies.js"></script>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prayer Request</title>
+    <meta
+      name="description"
+      content="Share a prayer request — our team would be honored to pray with you."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/prayer-request/prayer-request.css" />
+
+    <!-- EmailJS SDK — used only for a best-effort staff notification email;
+       the form's real source of truth is the Firestore write. -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Prayer Request</h1>
+          <p>We would be honored to pray with you. Share what's on your heart below.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container form-page-wrap">
+          <div class="card">
+            <div id="prayer-form-status"></div>
+
+            <form id="prayer-form" novalidate>
+              <div class="form-field">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="prayer-anonymous" name="isAnonymous" />
+                  Submit this request anonymously
+                </label>
+              </div>
+
+              <div class="form-field" id="prayer-name-field">
+                <label class="form-label" for="prayer-name">Full Name</label>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="prayer-name"
+                  name="name"
+                  autocomplete="name"
+                />
+                <span class="form-error-text" id="prayer-name-error"></span>
+              </div>
+
+              <div class="form-field" id="prayer-contact-field">
+                <label class="form-label" for="prayer-contact"
+                  >Email or Phone (so we can follow up)</label
+                >
+                <input
+                  class="form-input"
+                  type="text"
+                  id="prayer-contact"
+                  name="contact"
+                  autocomplete="email"
+                />
+                <span class="form-error-text" id="prayer-contact-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="prayer-request">Your Prayer Request</label>
+                <textarea
+                  class="form-textarea"
+                  id="prayer-request"
+                  name="requestText"
+                  required
+                ></textarea>
+                <span class="form-error-text" id="prayer-request-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="prayer-confidential" name="isConfidential" checked />
+                  Keep this request confidential (visible only to church staff)
+                </label>
+              </div>
+
+              <!-- Honeypot: hidden from real users, often filled in by bots -->
+              <div class="form-honeypot" aria-hidden="true">
+                <label for="prayer-website">Leave this field empty</label>
+                <input
+                  type="text"
+                  id="prayer-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="prayer-submit-btn">
+                Send Prayer Request
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/prayer-request/prayer-request.js"></script>
+  </body>
+</html>

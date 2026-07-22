@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership Registration</title>
+    <meta
+      name="description"
+      content="Take the next step and register for membership with our church family."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+
+    <!-- EmailJS SDK — used only for a best-effort staff notification email;
+       the form's real source of truth is the Firestore write. -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="page-header">
+        <div class="container">
+          <h1 class="page-header__title">Membership Registration</h1>
+          <p>We're glad you're taking this next step with us.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container form-page-wrap">
+          <div class="card">
+            <div id="membership-form-status"></div>
+
+            <form id="membership-form" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="member-full-name">Full Name</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="member-full-name"
+                    name="fullName"
+                    autocomplete="name"
+                    required
+                  />
+                  <span class="form-error-text" id="member-fullName-error"></span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="member-dob">Date of Birth</label>
+                  <input class="form-input" type="date" id="member-dob" name="dob" required />
+                  <span class="form-error-text" id="member-dob-error"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="member-gender">Gender</label>
+                  <select class="form-input" id="member-gender" name="gender" required>
+                    <option value="">Select…</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                  </select>
+                  <span class="form-error-text" id="member-gender-error"></span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="member-marital-status">Marital Status</label>
+                  <select class="form-input" id="member-marital-status" name="maritalStatus">
+                    <option value="">Select…</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="member-address">Home Address</label>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="member-address"
+                  name="address"
+                  autocomplete="street-address"
+                  required
+                />
+                <span class="form-error-text" id="member-address-error"></span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="member-phone">Phone Number</label>
+                  <input
+                    class="form-input"
+                    type="tel"
+                    id="member-phone"
+                    name="phone"
+                    autocomplete="tel"
+                    required
+                  />
+                  <span class="form-error-text" id="member-phone-error"></span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="member-email">Email Address</label>
+                  <input
+                    class="form-input"
+                    type="email"
+                    id="member-email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                  />
+                  <span class="form-error-text" id="member-email-error"></span>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="member-occupation">Occupation</label>
+                <input class="form-input" type="text" id="member-occupation" name="occupation" />
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="member-how-heard">How Did You Hear About Us?</label>
+                <input class="form-input" type="text" id="member-how-heard" name="howHeard" />
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="member-ministry-interest">Ministry Interest</label>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="member-ministry-interest"
+                  name="ministryInterest"
+                  placeholder="e.g. Worship Team, Children's Ministry, Ushering"
+                />
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="member-emergency-contact"
+                  >Emergency Contact (Name &amp; Phone)</label
+                >
+                <input
+                  class="form-input"
+                  type="text"
+                  id="member-emergency-contact"
+                  name="emergencyContact"
+                />
+                <span class="form-error-text" id="member-emergencyContact-error"></span>
+              </div>
+
+              <!-- Honeypot: hidden from real users, often filled in by bots -->
+              <div class="form-honeypot" aria-hidden="true">
+                <label for="member-website">Leave this field empty</label>
+                <input
+                  type="text"
+                  id="member-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="membership-submit-btn">
+                Submit Registration
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/membership/membership.js"></script>
+  </body>
+</html>

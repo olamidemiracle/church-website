@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan Your Visit</title>
+    <meta
+      name="description"
+      content="New here? Here's everything you need to know before your first visit."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+
+    <!-- Bridges Vercel environment variables into the browser (see api/env.js) -->
+    <script src="/api/env.js"></script>
+    <link rel="stylesheet" href="/src/pages/visit/visit.css" />
+
+    <!-- EmailJS SDK — used only for a best-effort staff notification email;
+       the form's real source of truth is the Firestore write. -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main-content">
+      <section class="hero">
+        <div class="container">
+          <span class="hero__eyebrow">New Here?</span>
+          <h1 class="hero__title">We Can't Wait to Meet You</h1>
+          <p class="hero__subtitle">
+            Here's everything you need to know before your first visit — what to expect, where to
+            park, and what your kids will love.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container card-grid card-grid--3">
+          <div class="card">
+            <h3>What to Wear</h3>
+            <p class="text-sm">
+              Come as you are. You'll see everything from jeans to Sunday best — wear what feels
+              like you.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Where to Park</h3>
+            <p class="text-sm">
+              Free parking is available on-site, with our welcome team ready to point you the right
+              way.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Kids &amp; Family</h3>
+            <p class="text-sm">
+              Our kids' ministry offers age-appropriate programming so the whole family feels at
+              home.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background-color: var(--color-surface-alt)">
+        <div class="container form-page-wrap">
+          <h2 style="text-align: center; margin-bottom: var(--space-2)">
+            Let Us Know You're Coming
+          </h2>
+          <p style="text-align: center; margin-bottom: var(--space-6)">
+            Tell us a little about you, and someone will be there to welcome you personally.
+          </p>
+
+          <div class="card">
+            <div id="visit-form-status"></div>
+
+            <form id="visit-form" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="visit-name">Full Name</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="visit-name"
+                    name="name"
+                    autocomplete="name"
+                    required
+                  />
+                  <span class="form-error-text" id="visit-name-error"></span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="visit-email">Email Address</label>
+                  <input
+                    class="form-input"
+                    type="email"
+                    id="visit-email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                  />
+                  <span class="form-error-text" id="visit-email-error"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="visit-phone">Phone Number</label>
+                  <input
+                    class="form-input"
+                    type="tel"
+                    id="visit-phone"
+                    name="phone"
+                    autocomplete="tel"
+                    required
+                  />
+                  <span class="form-error-text" id="visit-phone-error"></span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="visit-date"
+                    >Which Sunday Are You Planning to Visit?</label
+                  >
+                  <input class="form-input" type="date" id="visit-date" name="visitDate" />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="visit-how-heard">How Did You Hear About Us?</label>
+                <input class="form-input" type="text" id="visit-how-heard" name="howHeard" />
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="visit-prayer-needs"
+                  >Anything We Can Pray About? (optional)</label
+                >
+                <textarea
+                  class="form-textarea"
+                  id="visit-prayer-needs"
+                  name="prayerNeeds"
+                ></textarea>
+              </div>
+
+              <!-- Honeypot: hidden from real users, often filled in by bots -->
+              <div class="form-honeypot" aria-hidden="true">
+                <label for="visit-website">Leave this field empty</label>
+                <input
+                  type="text"
+                  id="visit-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="visit-submit-btn">
+                Let Us Know You're Coming
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script type="module" src="/src/pages/visit/visit.js"></script>
+  </body>
+</html>

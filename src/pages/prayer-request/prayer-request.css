@@ -1,0 +1,7 @@
+/* Prayer Request page — minor page-specific tweaks only;
+   shared form styles live in styles/components.css */
+
+#prayer-name-field,
+#prayer-contact-field {
+  transition: opacity var(--transition-base);
+}
