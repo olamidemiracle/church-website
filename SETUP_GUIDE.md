@@ -559,6 +559,111 @@ this script is only meant for creating that very first account.
 
 ---
 
+# PART G — Test your website locally (using staging)
+
+Do this before every future phase, and always before touching production. It
+connects your own computer to your **staging** Firebase project only — production
+data is never touched by this process.
+
+### G.1 — Make sure Node.js is installed
+
+1. Open Terminal and type: `node -v`
+2. If you see a version number, skip to G.2.
+3. If you see "command not found," go to **nodejs.org**, download the LTS version
+   for your computer, and install it with all default options. Close and reopen
+   Terminal, then try `node -v` again.
+
+### G.2 — Install the Vercel command-line tool
+
+1. In Terminal, type:
+   ```
+   npm install -g vercel
+   ```
+
+### G.3 — Log in to Vercel from Terminal
+
+1. Type:
+   ```
+   vercel login
+   ```
+2. Follow the prompts — it usually opens your browser to confirm.
+
+### G.4 — Connect your project folder to your Vercel project
+
+1. Make sure Terminal is inside your `church-website` project folder.
+2. Type:
+   ```
+   vercel link
+   ```
+3. Choose the Vercel project you created back in Part C when asked.
+
+### G.5 — Download your staging environment variables
+
+1. Type:
+   ```
+   vercel env pull .env.local
+   ```
+2. This creates a file called `.env.local` with your **Development** environment
+   values (the staging Firebase config from Part C.3).
+3. Open `.env.local` and confirm `FIREBASE_PROJECT_ID` says `church-website-staging`
+   — **never test against the `-prod` project.**
+
+### G.6 — Make sure staging's rules and indexes are up to date
+
+New rules and indexes get added as more of the website is built, so re-deploy them
+before testing:
+
+```
+firebase use staging
+firebase deploy --only firestore:rules,firestore:indexes,storage:rules
+```
+
+### G.7 — Start your local server
+
+1. Type:
+   ```
+   vercel dev
+   ```
+2. Accept any default prompts. After a moment you'll see something like
+   `Ready! Available at http://localhost:3000`.
+
+### G.8 — Open it in your browser
+
+Go to `http://localhost:3000` and click through every page — About, Ministries,
+Sermons, Events, Gallery, News, Service Times, Contact, Location, Prayer Request,
+Membership, Visit, Testimonies, Privacy Policy, Terms.
+
+Since your staging database starts empty, Sermons/Events/Ministries/Gallery/News/
+Testimonies will show friendly "coming soon" messages instead of real content —
+**this is expected, not a bug.**
+
+### G.9 — (Optional) Add a few test entries
+
+In your staging project's Firestore Console, manually add one sample document to
+`ministries`, `sermons`, `events`, `news`, or `galleryAlbums` (matching the field
+names in the project plan) so you can see the list pages populate with real content.
+
+### G.10 — Test the admin dashboard
+
+1. Go to `http://localhost:3000/admin/login`.
+2. If you haven't completed Part F yet against your **staging** project, do that
+   first so you have a login to test with.
+3. Sign in and confirm you land on the Dashboard. Stat counts will likely show `0`
+   for everything — that's correct, since there's no data yet.
+
+### G.11 — Test your public forms
+
+Submit the Contact, Prayer Request, Membership, Visit, and Testimony forms once
+each. Then check your staging Firestore Console to confirm each submission landed
+in the right collection (`contactMessages`, `prayerRequests`,
+`membershipApplications`, `visitorSubmissions`, `testimonies`).
+
+### G.12 — Stop the local server when you're done
+
+Press **Ctrl+C** in the Terminal window running `vercel dev`.
+
+---
+
 ## Final Checklist
 
 Go through this list and check off each box as you complete it:
@@ -590,6 +695,8 @@ Go through this list and check off each box as you complete it:
 - [ ] Service account key downloaded and bootstrap script run successfully
 - [ ] Service account key file deleted or moved somewhere private afterward
 - [ ] Successfully logged in at `/admin/login` and saw the Dashboard
+- [ ] Tested the whole site locally with `vercel dev` against staging
+- [ ] Confirmed test form submissions appeared correctly in staging's Firestore
 
 Once every box is checked, message me and we'll move on to **Phase 2 — building the
 actual pages of your website.**
