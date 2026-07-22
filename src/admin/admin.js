@@ -21,11 +21,31 @@ import {
 import { renderLogin } from './login/login.js';
 import { renderForgotPassword } from './login/forgot-password.js';
 import { renderDashboard } from './dashboard/dashboard.js';
+import { renderSermonsAdmin } from './sermons/sermons.js';
+import { renderEventsAdmin } from './events/events.js';
+import { renderMinistriesAdmin } from './ministries/ministries.js';
+import { renderGalleryAdmin } from './gallery/gallery.js';
+import { renderLeadershipAdmin } from './leadership/leadership.js';
+import { renderNewsAdmin } from './news/news.js';
+import { renderTestimoniesAdmin } from './testimonies/testimonies.js';
+import { renderSettingsAdmin } from './settings/settings.js';
 
 registerRoute('/admin', { render: renderDashboard, requireAuth: true });
 registerRoute('/admin/login', { render: renderLogin, requireAuth: false });
 registerRoute('/admin/forgot-password', { render: renderForgotPassword, requireAuth: false });
 registerRoute('/admin/dashboard', { render: renderDashboard, requireAuth: true });
+registerRoute('/admin/sermons', { render: renderSermonsAdmin, requireAuth: true });
+registerRoute('/admin/events', { render: renderEventsAdmin, requireAuth: true });
+registerRoute('/admin/ministries', { render: renderMinistriesAdmin, requireAuth: true });
+registerRoute('/admin/gallery', { render: renderGalleryAdmin, requireAuth: true });
+registerRoute('/admin/leadership', { render: renderLeadershipAdmin, requireAuth: true });
+registerRoute('/admin/news', { render: renderNewsAdmin, requireAuth: true });
+registerRoute('/admin/testimonies', { render: renderTestimoniesAdmin, requireAuth: true });
+registerRoute('/admin/settings', {
+  render: renderSettingsAdmin,
+  requireAuth: true,
+  requireRoles: ['superadmin'],
+});
 
 registerNotFound((root) => {
   root.innerHTML = `
@@ -42,6 +62,11 @@ registerNotFound((root) => {
 // redirect to /admin/login when signed out; the login/forgot-password
 // routes redirect away to the dashboard when already signed in, so a
 // logged-in admin can't land back on the login form via browser history.
+// Routes flagged requireRoles additionally check the signed-in user's
+// custom claim role (Website Settings is superadmin-only) — this is a
+// UX convenience only, not the real security boundary, which is
+// firestore.rules (a non-superadmin's write would be rejected there
+// regardless of what this guard does).
 setGuard((route, authState) => {
   const isSignedIn = Boolean(authState.user);
 
@@ -49,6 +74,9 @@ setGuard((route, authState) => {
     return '/admin/login';
   }
   if (!route.requireAuth && isSignedIn && route.path !== '/admin/forgot-password') {
+    return '/admin/dashboard';
+  }
+  if (route.requireRoles && !route.requireRoles.includes(authState.role)) {
     return '/admin/dashboard';
   }
   return true;

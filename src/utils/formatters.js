@@ -57,3 +57,31 @@ export function isPast(value) {
   }
   return d.getTime() < Date.now();
 }
+
+/** Converts a Firestore Timestamp/Date/string into a 'YYYY-MM-DD' string for an <input type="date"> value. */
+export function toDateInputValue(value) {
+  const d = toDate(value);
+  if (!d) {
+    return '';
+  }
+  return d.toISOString().slice(0, 10);
+}
+
+/** Converts a Firestore Timestamp/Date/string into a 'YYYY-MM-DDTHH:mm' string for an <input type="datetime-local"> value. */
+export function toDateTimeLocalInputValue(value) {
+  const d = toDate(value);
+  if (!d) {
+    return '';
+  }
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** Converts an <input type="date"|"datetime-local"> string value back into a JS Date for saving to Firestore. Returns null for an empty string. */
+export function fromDateInputValue(value) {
+  if (!value) {
+    return null;
+  }
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
+}

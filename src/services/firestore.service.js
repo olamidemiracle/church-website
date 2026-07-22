@@ -26,6 +26,8 @@ const {
   limit: fsLimit,
   startAfter,
   addDoc,
+  updateDoc,
+  deleteDoc,
   serverTimestamp,
 } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
 
@@ -170,6 +172,69 @@ export async function createSubcollectionDocument(
   } catch (error) {
     console.error(
       `[firestore] createSubcollectionDocument(${parentCollection}/${parentId}/${subcollectionName}) failed:`,
+      error
+    );
+    throw error;
+  }
+}
+
+/**
+ * Updates an existing document (used by admin CRUD modules — Manage
+ * Sermons, Manage Events, etc.). Stamps `updatedAt`. Allowed by
+ * firestore.rules for editors/superadmins only.
+ */
+export async function updateDocument(collectionName, id, data) {
+  try {
+    await updateDoc(doc(db, collectionName, id), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error(`[firestore] updateDocument(${collectionName}/${id}) failed:`, error);
+    throw error;
+  }
+}
+
+/** Deletes a document (used by admin CRUD modules). Allowed by firestore.rules for editors/superadmins only. */
+export async function deleteDocument(collectionName, id) {
+  try {
+    await deleteDoc(doc(db, collectionName, id));
+  } catch (error) {
+    console.error(`[firestore] deleteDocument(${collectionName}/${id}) failed:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Creates a new document via an admin CRUD module (Manage Sermons, Manage
+ * Events, etc.). Stamps `createdAt` — distinct from createDocument() below,
+ * which stamps `submittedAt` and is used by public form submissions.
+ */
+export async function createAdminDocument(collectionName, data) {
+  try {
+    const ref = await addDoc(collection(db, collectionName), {
+      ...data,
+      createdAt: serverTimestamp(),
+    });
+    return ref.id;
+  } catch (error) {
+    console.error(`[firestore] createAdminDocument(${collectionName}) failed:`, error);
+    throw error;
+  }
+}
+
+/** Deletes a document inside a subcollection (e.g. removing one Gallery album image). */
+export async function deleteSubcollectionDocument(
+  parentCollection,
+  parentId,
+  subcollectionName,
+  docId
+) {
+  try {
+    await deleteDoc(doc(db, parentCollection, parentId, subcollectionName, docId));
+  } catch (error) {
+    console.error(
+      `[firestore] deleteSubcollectionDocument(${parentCollection}/${parentId}/${subcollectionName}/${docId}) failed:`,
       error
     );
     throw error;
