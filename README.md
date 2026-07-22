@@ -4,7 +4,31 @@ Public church website + admin dashboard. Built with HTML5, CSS3, Vanilla JavaScr
 
 ## Status
 
-**Phase 1 — Foundation.** Repo scaffolding, design tokens, Firestore/Storage rules skeleton, and the Firebase service module are in place. Firebase project creation and Vercel linking are pending — see `SETUP_GUIDE.md` for the manual steps required (these need your personal accounts and can't be done for you).
+**Phase 5 — Admin Auth + Shell.** The public site (Phases 1-4) is fully built:
+Home, About + subpages, Ministries, Sermons, Events, Gallery, News, Service Times,
+Contact, Location, Legal pages, and every public form (Prayer Request, Membership,
+Visit, Testimonies). The admin dashboard now has a working Login, Forgot Password,
+route guard, sidebar/topbar shell, and Dashboard Home with live stats. Admin CRUD
+modules (Manage Sermons, Manage Events, etc.) are Phase 6 — see `SETUP_GUIDE.md`
+Part F for how to create your first admin login.
+
+## Admin Dashboard Architecture
+
+Unlike the public site (plain multi-page HTML), `/admin` is a small single-page app:
+
+- `src/admin/index.html` is the one real HTML file; Vercel rewrites every
+  `/admin/:path*` request to it (see `vercel.json`).
+- `src/router/router.js` is a small History-API router: routes are registered with
+  `requireAuth`/`requireRoles`, and a guard function redirects signed-out visitors to
+  `/admin/login` and signed-in visitors away from the login page.
+- `src/services/auth.service.js` wraps Firebase Auth (sign in/out, password reset,
+  reading the `role` custom claim off the ID token).
+- `src/layouts/admin-layout.js` renders the sidebar/topbar shell around every
+  authenticated page's content.
+- Custom claims (`role: "superadmin" | "editor"`) can only be set server-side — see
+  `functions/setUserRole.js` (a callable Cloud Function, usable only by an existing
+  superadmin) and `scripts/bootstrap-admin.cjs` (a one-time local script that creates
+  the very first superadmin, since `setUserRole` needs an existing one to call it).
 
 ## Project Structure
 

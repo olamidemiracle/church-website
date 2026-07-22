@@ -11,12 +11,14 @@
     "format:check": "prettier --check .",
     "dev": "vercel dev",
     "deploy:staging": "vercel --env-file=.env.staging",
-    "deploy:prod": "vercel --prod"
+    "deploy:prod": "vercel --prod",
+    "bootstrap-admin": "node scripts/bootstrap-admin.cjs"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "prettier": "^3.3.0"
+    "prettier": "^3.3.0",
+    "firebase-admin": "^12.3.0"
   },
   "engines": {
     "node": ">=18"

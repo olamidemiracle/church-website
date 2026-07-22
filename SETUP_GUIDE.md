@@ -474,6 +474,91 @@ Key like a bank PIN.
 
 ---
 
+# PART F — Create your first admin login
+
+Your website now has an admin dashboard at `/admin/login`, but there's no way to sign
+up through the website itself (that's on purpose — random visitors shouldn't be able
+to create themselves an admin account). This part walks through creating your very
+first admin login, once, by hand.
+
+### F.1 — Turn on billing on your Firebase project (required for Cloud Functions)
+
+1. Go to **console.firebase.google.com** and open your **production** project
+   (`church-website-prod`).
+2. Click the gear icon (top-left) → **Usage and billing**.
+3. Click **Modify plan** and switch to the **Blaze (pay as you go)** plan. This is
+   required to use Cloud Functions, but Google gives a generous free monthly amount,
+   and a small church site is very unlikely to be charged anything meaningful.
+4. Repeat for your **staging** project too, if you want Cloud Functions to work there
+   as well.
+
+### F.2 — Deploy the Cloud Functions
+
+1. Open the Terminal (see Part A.4) and move into your project folder.
+2. Type this and press Enter to install the Cloud Functions' own dependencies:
+   ```
+   cd functions
+   npm install
+   cd ..
+   ```
+3. Type this and press Enter:
+   ```
+   firebase deploy --only functions
+   ```
+4. Wait for it to finish — you'll see a checkmark and a URL when it succeeds.
+
+### F.3 — Create your first admin user
+
+1. In the Firebase Console (production project), click **Build** → **Authentication**
+   in the left-hand menu.
+2. Click the **Users** tab, then **Add user**.
+3. Type in the email address and a password for your first admin account (this can be
+   your own email). Click **Add user**.
+4. This person can now technically log in, but doesn't have admin permissions yet —
+   the next steps fix that.
+
+### F.4 — Download a service account key (used only on your own computer)
+
+1. In the Firebase Console, click the gear icon → **Project settings**.
+2. Click the **Service accounts** tab.
+3. Click **Generate new private key**, then confirm.
+4. A `.json` file will download to your computer. **Move this file somewhere safe
+   outside your project folder** (e.g. your Desktop or Documents) — never upload
+   this file anywhere or add it to GitHub. It grants full admin access to your
+   Firebase project.
+
+### F.5 — Run the bootstrap script to make that user a superadmin
+
+1. In the Terminal, make sure you're inside your project folder, then type:
+   ```
+   npm install
+   ```
+2. Now type the following, replacing the file path with wherever you saved the
+   `.json` key in step F.4, and the email with the one you used in step F.3:
+   ```
+   npm run bootstrap-admin -- /path/to/your-key.json admin@yourchurch.org
+   ```
+   (On Mac, you can drag the `.json` file from Finder into the Terminal window right
+   after typing `bootstrap-admin -- ` to fill in its exact path automatically.)
+3. You should see a message like `✅ admin@yourchurch.org is now a superadmin.`
+4. **Delete the `.json` key file from your computer once you're done with it**, or
+   move it somewhere private and backed up — treat it like a master password.
+
+### F.6 — Log in
+
+1. Go to `https://yoursite.vercel.app/admin/login` (or your real domain once
+   connected).
+2. Enter the email and password from step F.3.
+3. You should land on the Admin Dashboard, showing counts of new prayer requests,
+   pending membership applications, unread messages, and testimonies awaiting
+   review.
+
+Future admin/editor accounts (for other staff) should be created through the
+**Manage Users** page once it's built, rather than repeating this bootstrap process —
+this script is only meant for creating that very first account.
+
+---
+
 ## Final Checklist
 
 Go through this list and check off each box as you complete it:
@@ -499,6 +584,12 @@ Go through this list and check off each box as you complete it:
 - [ ] EmailJS account, service, and template created; three codes written down and
       added to Vercel
 - [ ] Paystack account created; Test Public Key and Test Secret Key written down
+- [ ] Blaze (pay-as-you-go) plan enabled on your Firebase project(s)
+- [ ] Cloud Functions deployed successfully
+- [ ] First admin user created in Firebase Authentication
+- [ ] Service account key downloaded and bootstrap script run successfully
+- [ ] Service account key file deleted or moved somewhere private afterward
+- [ ] Successfully logged in at `/admin/login` and saw the Dashboard
 
 Once every box is checked, message me and we'll move on to **Phase 2 — building the
 actual pages of your website.**

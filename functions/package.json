@@ -1,0 +1,17 @@
+{
+  "name": "church-website-functions",
+  "description": "Cloud Functions for the church website (role assignment, donation webhook, form email notifications)",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.3.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "deploy": "firebase deploy --only functions"
+  }
+}
