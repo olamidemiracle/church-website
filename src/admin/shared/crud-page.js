@@ -45,6 +45,7 @@ import {
   createAdminDocument,
   updateDocument,
   deleteDocument,
+  logActivity,
 } from '../../services/firestore.service.js';
 import { uploadFile, buildStoragePath } from '../../services/storage.service.js';
 import { renderAdminLayout } from '../../layouts/admin-layout.js';
@@ -73,12 +74,14 @@ export function renderCrudPage(root, authState, activePath, config) {
   renderAdminLayout(root, { activePath, user: authState.user, role: authState.role, contentHTML });
 
   const pageRoot = qs('#admin-page-content', root);
-  qs('#crud-add-btn', pageRoot).addEventListener('click', () => showForm(pageRoot, config, null));
+  qs('#crud-add-btn', pageRoot).addEventListener('click', () =>
+    showForm(pageRoot, config, null, authState)
+  );
 
-  loadList(pageRoot, config);
+  loadList(pageRoot, config, authState);
 }
 
-async function loadList(pageRoot, config) {
+async function loadList(pageRoot, config, authState) {
   const listWrap = qs('#crud-list-wrap', pageRoot);
 
   try {
@@ -92,7 +95,7 @@ async function loadList(pageRoot, config) {
       return;
     }
 
-    renderTable(pageRoot, config, items);
+    renderTable(pageRoot, config, items, authState);
   } catch (error) {
     listWrap.innerHTML = `
       <p class="state-message state-message--error">
@@ -101,7 +104,7 @@ async function loadList(pageRoot, config) {
   }
 }
 
-function renderTable(pageRoot, config, items) {
+function renderTable(pageRoot, config, items, authState) {
   const listWrap = qs('#crud-list-wrap', pageRoot);
 
   const headerCells = config.columns.map((col) => `<th>${escapeHTML(col.label)}</th>`).join('');
@@ -136,16 +139,16 @@ function renderTable(pageRoot, config, items) {
   qsa('.admin-edit-btn', listWrap).forEach((btn) => {
     btn.addEventListener('click', () => {
       const item = items.find((i) => i.id === btn.dataset.id);
-      showForm(pageRoot, config, item);
+      showForm(pageRoot, config, item, authState);
     });
   });
 
   qsa('.admin-delete-btn', listWrap).forEach((btn) => {
-    btn.addEventListener('click', () => handleDelete(pageRoot, config, btn.dataset.id));
+    btn.addEventListener('click', () => handleDelete(pageRoot, config, btn.dataset.id, authState));
   });
 }
 
-async function handleDelete(pageRoot, config, id) {
+async function handleDelete(pageRoot, config, id, authState) {
   // eslint-disable-next-line no-alert
   const confirmed = window.confirm('Delete this item? This cannot be undone.');
   if (!confirmed) {
@@ -154,14 +157,21 @@ async function handleDelete(pageRoot, config, id) {
 
   try {
     await deleteDocument(config.collectionName, id);
-    await loadList(pageRoot, config);
+    logActivity({
+      adminId: authState.user?.uid,
+      adminEmail: authState.user?.email,
+      action: 'delete',
+      targetCollection: config.collectionName,
+      targetId: id,
+    });
+    await loadList(pageRoot, config, authState);
   } catch (error) {
     // eslint-disable-next-line no-alert
     window.alert("Couldn't delete this item. Please try again.");
   }
 }
 
-function showForm(pageRoot, config, existingItem) {
+function showForm(pageRoot, config, existingItem, authState) {
   const formWrap = qs('#crud-form-wrap', pageRoot);
   const isEdit = Boolean(existingItem);
 
@@ -182,7 +192,7 @@ function showForm(pageRoot, config, existingItem) {
     formWrap.innerHTML = '';
   });
 
-  initFormSubmit(pageRoot, config, existingItem);
+  initFormSubmit(pageRoot, config, existingItem, authState);
   formWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -236,7 +246,7 @@ function renderField(field, existingItem) {
     </div>`;
 }
 
-function initFormSubmit(pageRoot, config, existingItem) {
+function initFormSubmit(pageRoot, config, existingItem, authState) {
   const form = qs('#crud-form', pageRoot);
   const statusEl = qs('#crud-form-status', pageRoot);
   const submitBtn = qs('#crud-submit-btn', pageRoot);
@@ -271,9 +281,17 @@ function initFormSubmit(pageRoot, config, existingItem) {
         await updateDocument(config.collectionName, docId, fileUpdates);
       }
 
+      logActivity({
+        adminId: authState.user?.uid,
+        adminEmail: authState.user?.email,
+        action: isEdit ? 'update' : 'create',
+        targetCollection: config.collectionName,
+        targetId: docId,
+      });
+
       qs('#crud-form-wrap', pageRoot).hidden = true;
       qs('#crud-form-wrap', pageRoot).innerHTML = '';
-      await loadList(pageRoot, config);
+      await loadList(pageRoot, config, authState);
     } catch (error) {
       statusEl.innerHTML = `
         <div class="form-status form-status--error">

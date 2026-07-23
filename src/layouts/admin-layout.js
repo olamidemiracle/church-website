@@ -38,12 +38,12 @@ const NAV_SECTIONS = [
   {
     heading: 'Submissions',
     items: [
-      { label: 'Prayer Requests', path: '/admin/prayer-requests', enabled: false },
-      { label: 'Membership Applications', path: '/admin/membership', enabled: false },
-      { label: 'Visitor Submissions', path: '/admin/visitors', enabled: false },
+      { label: 'Prayer Requests', path: '/admin/prayer-requests', enabled: true },
+      { label: 'Membership Applications', path: '/admin/membership', enabled: true },
+      { label: 'Visitor Submissions', path: '/admin/visitors', enabled: true },
       { label: 'Testimonies', path: '/admin/testimonies', enabled: true },
-      { label: 'Contact Messages', path: '/admin/messages', enabled: false },
-      { label: 'Donations', path: '/admin/donations', enabled: false, superadminOnly: true },
+      { label: 'Contact Messages', path: '/admin/messages', enabled: true },
+      { label: 'Donations', path: '/admin/donations', enabled: true, superadminOnly: true },
     ],
   },
   {
@@ -51,7 +51,7 @@ const NAV_SECTIONS = [
     items: [
       { label: 'Manage Users', path: '/admin/users', enabled: false, superadminOnly: true },
       { label: 'Website Settings', path: '/admin/settings', enabled: true, superadminOnly: true },
-      { label: 'Activity Log', path: '/admin/activity-log', enabled: false, superadminOnly: true },
+      { label: 'Activity Log', path: '/admin/activity-log', enabled: true, superadminOnly: true },
     ],
   },
 ];

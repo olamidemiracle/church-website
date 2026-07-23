@@ -19,11 +19,19 @@ import {
   deleteDocument,
   createSubcollectionDocument,
   deleteSubcollectionDocument,
+  logActivity,
 } from '../../services/firestore.service.js';
 import { uploadFile, buildStoragePath } from '../../services/storage.service.js';
 import { escapeHTML, qs, qsa } from '../../utils/dom-helpers.js';
 
+// Module-level, not component state: only one admin page renders at a time
+// in this SPA, so stashing the signed-in admin here (for activity logging)
+// avoids threading authState through every nested function call.
+let currentAuthState = null;
+
 export function renderGalleryAdmin(root, authState) {
+  currentAuthState = authState;
+
   const contentHTML = `
     <div class="admin-page-header">
       <div>
@@ -125,6 +133,13 @@ async function handleAlbumDelete(pageRoot, albumId) {
 
   try {
     await deleteDocument('galleryAlbums', albumId);
+    logActivity({
+      adminId: currentAuthState.user?.uid,
+      adminEmail: currentAuthState.user?.email,
+      action: 'delete',
+      targetCollection: 'galleryAlbums',
+      targetId: albumId,
+    });
     await loadAlbumList(pageRoot);
   } catch (error) {
     // eslint-disable-next-line no-alert
@@ -203,6 +218,14 @@ function showAlbumForm(pageRoot, existingAlbum) {
       } else if (isEdit) {
         await updateDocument('galleryAlbums', albumId, values);
       }
+
+      logActivity({
+        adminId: currentAuthState.user?.uid,
+        adminEmail: currentAuthState.user?.email,
+        action: isEdit ? 'update' : 'create',
+        targetCollection: 'galleryAlbums',
+        targetId: albumId,
+      });
 
       formWrap.hidden = true;
       formWrap.innerHTML = '';
@@ -307,6 +330,13 @@ function renderPhotoGrid(pageRoot, wrap, albumId, images) {
       }
       try {
         await deleteSubcollectionDocument('galleryAlbums', albumId, 'images', btn.dataset.id);
+        logActivity({
+          adminId: currentAuthState.user?.uid,
+          adminEmail: currentAuthState.user?.email,
+          action: 'delete',
+          targetCollection: 'galleryAlbums/images',
+          targetId: btn.dataset.id,
+        });
         await showPhotosView(pageRoot, albumId);
       } catch (error) {
         // eslint-disable-next-line no-alert
@@ -343,6 +373,14 @@ function initAddPhotoForm(pageRoot, wrap, albumId, existingImages) {
         imageUrl: url,
         caption: qs('#photo-caption', wrap).value,
         order: nextOrder,
+      });
+
+      logActivity({
+        adminId: currentAuthState.user?.uid,
+        adminEmail: currentAuthState.user?.email,
+        action: 'create',
+        targetCollection: 'galleryAlbums/images',
+        targetId: albumId,
       });
 
       await showPhotosView(pageRoot, albumId);

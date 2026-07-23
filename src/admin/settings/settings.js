@@ -12,12 +12,17 @@
  */
 
 import { renderAdminLayout } from '../../layouts/admin-layout.js';
-import { getDocument, updateDocument } from '../../services/firestore.service.js';
+import { getDocument, updateDocument, logActivity } from '../../services/firestore.service.js';
 import { escapeHTML, qs, qsa } from '../../utils/dom-helpers.js';
 
 let serviceTimeRowCount = 0;
+// Module-level, not component state: only one admin page renders at a time
+// in this SPA, so stashing the signed-in admin here (for activity logging)
+// avoids threading authState through every nested function call.
+let currentAuthState = null;
 
 export function renderSettingsAdmin(root, authState) {
+  currentAuthState = authState;
   const contentHTML = `
     <h1>Website Settings</h1>
     <p class="admin-content__subtitle">Church info, contact details, and service times shown across the public site.</p>
@@ -179,6 +184,13 @@ function initFormSubmit(wrap) {
 
     try {
       await updateDocument('settings', 'general', values);
+      logActivity({
+        adminId: currentAuthState.user?.uid,
+        adminEmail: currentAuthState.user?.email,
+        action: 'update',
+        targetCollection: 'settings',
+        targetId: 'general',
+      });
       statusEl.innerHTML = `<div class="form-status form-status--success">Settings saved successfully.</div>`;
     } catch (error) {
       statusEl.innerHTML = `<div class="form-status form-status--error">Something went wrong saving settings. Please try again.</div>`;

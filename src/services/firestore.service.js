@@ -258,3 +258,34 @@ export async function createDocument(collectionName, data) {
     throw error;
   }
 }
+
+/**
+ * Records an entry in the activityLogs collection (Manage Users' audit
+ * trail, viewed on the Activity Log admin page). Called by every admin
+ * module after a create/update/delete/status-change action.
+ *
+ * Deliberately non-throwing: a logging failure should never block the
+ * actual action it's recording, so errors are only logged to console.
+ */
+export async function logActivity({
+  adminId,
+  adminEmail,
+  action,
+  targetCollection,
+  targetId,
+  details,
+}) {
+  try {
+    await addDoc(collection(db, 'activityLogs'), {
+      adminId: adminId || null,
+      adminEmail: adminEmail || null,
+      action,
+      targetCollection,
+      targetId: targetId || null,
+      details: details || null,
+      timestamp: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error('[firestore] logActivity failed (non-blocking):', error);
+  }
+}

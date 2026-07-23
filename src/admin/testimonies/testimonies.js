@@ -13,6 +13,7 @@ import {
   getCollectionList,
   updateDocument,
   deleteDocument,
+  logActivity,
 } from '../../services/firestore.service.js';
 import { escapeHTML, qs, qsa } from '../../utils/dom-helpers.js';
 import { formatDate } from '../../utils/formatters.js';
@@ -23,7 +24,14 @@ const STATUS_LABELS = {
   rejected: 'Rejected',
 };
 
+// Module-level, not component state: only one admin page renders at a time
+// in this SPA, so stashing the signed-in admin here (for activity logging)
+// avoids threading authState through every nested function call.
+let currentAuthState = null;
+
 export function renderTestimoniesAdmin(root, authState) {
+  currentAuthState = authState;
+
   const contentHTML = `
     <h1>Manage Testimonies</h1>
     <p class="admin-content__subtitle">Review, approve, or reject testimonies submitted by visitors.</p>
@@ -105,6 +113,13 @@ function renderTestimonyCard(testimony) {
 async function updateStatus(pageRoot, id, status) {
   try {
     await updateDocument('testimonies', id, { status });
+    logActivity({
+      adminId: currentAuthState.user?.uid,
+      adminEmail: currentAuthState.user?.email,
+      action: `status:${status}`,
+      targetCollection: 'testimonies',
+      targetId: id,
+    });
     await loadTestimonies(pageRoot);
   } catch (error) {
     // eslint-disable-next-line no-alert
@@ -121,6 +136,13 @@ async function handleDelete(pageRoot, id) {
 
   try {
     await deleteDocument('testimonies', id);
+    logActivity({
+      adminId: currentAuthState.user?.uid,
+      adminEmail: currentAuthState.user?.email,
+      action: 'delete',
+      targetCollection: 'testimonies',
+      targetId: id,
+    });
     await loadTestimonies(pageRoot);
   } catch (error) {
     // eslint-disable-next-line no-alert

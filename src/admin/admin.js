@@ -29,6 +29,12 @@ import { renderLeadershipAdmin } from './leadership/leadership.js';
 import { renderNewsAdmin } from './news/news.js';
 import { renderTestimoniesAdmin } from './testimonies/testimonies.js';
 import { renderSettingsAdmin } from './settings/settings.js';
+import { renderPrayerRequestsAdmin } from './prayer-requests/prayer-requests.js';
+import { renderMembershipApplicationsAdmin } from './membership/membership-applications.js';
+import { renderVisitorsAdmin } from './visitors/visitors.js';
+import { renderMessagesAdmin } from './messages/messages.js';
+import { renderDonationsAdmin } from './donations/donations.js';
+import { renderActivityLogAdmin } from './activity-log/activity-log.js';
 
 registerRoute('/admin', { render: renderDashboard, requireAuth: true });
 registerRoute('/admin/login', { render: renderLogin, requireAuth: false });
@@ -43,6 +49,23 @@ registerRoute('/admin/news', { render: renderNewsAdmin, requireAuth: true });
 registerRoute('/admin/testimonies', { render: renderTestimoniesAdmin, requireAuth: true });
 registerRoute('/admin/settings', {
   render: renderSettingsAdmin,
+  requireAuth: true,
+  requireRoles: ['superadmin'],
+});
+registerRoute('/admin/prayer-requests', { render: renderPrayerRequestsAdmin, requireAuth: true });
+registerRoute('/admin/membership', {
+  render: renderMembershipApplicationsAdmin,
+  requireAuth: true,
+});
+registerRoute('/admin/visitors', { render: renderVisitorsAdmin, requireAuth: true });
+registerRoute('/admin/messages', { render: renderMessagesAdmin, requireAuth: true });
+registerRoute('/admin/donations', {
+  render: renderDonationsAdmin,
+  requireAuth: true,
+  requireRoles: ['superadmin'],
+});
+registerRoute('/admin/activity-log', {
+  render: renderActivityLogAdmin,
   requireAuth: true,
   requireRoles: ['superadmin'],
 });
