@@ -107,7 +107,7 @@ All color, type, spacing, breakpoint, radius, and shadow values are defined once
 Deploy rules with:
 
 ```
-firebase deploy --only firestore:rules,storage:rules
+firebase deploy --only firestore:rules,storage
 ```
 
 (after completing the Firebase CLI login step in `SETUP_GUIDE.md`).

@@ -291,7 +291,7 @@ This step uses the Terminal again (see Part A.4 for how to open it).
    `production`, press Enter.
 6. Finally, type this and press Enter:
    ```
-   firebase deploy --only firestore:rules,storage:rules
+   firebase deploy --only firestore:rules,storage
    ```
    Wait for it to say "Deploy complete!" This has now safely locked down both your
    staging and production databases using the rules already prepared for you.
@@ -341,6 +341,20 @@ putting the codes directly into files anyone could see.
    `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID`,
    `FIREBASE_APP_ID`, `FIREBASE_MEASUREMENT_ID`, and
    `APP_CHECK_RECAPTCHA_SITE_KEY`.
+6. **⚠️ Important — look for a toggle or checkbox labeled "Sensitive" on the Add
+   Environment Variable form.** Vercel now defaults new Production/Preview variables
+   to "Sensitive," which means their value can never be read back — not in the
+   dashboard, and not by the `vercel env pull` command you'll use in Part G. **Turn
+   this OFF for every variable above.** None of these values are actually secret —
+   a Firebase web app's config is safe to expose publicly by design (the real
+   security boundary is Firestore/Storage Security Rules, not hiding this config) —
+   so there's no downside to keeping "Sensitive" off, and it's required for local
+   testing to work.
+7. After adding everything, go to the Environment Variables list and double-check:
+   click each Firebase-related variable and confirm the **Development** checkbox is
+   ticked for your staging values specifically (not just Preview). If you only
+   checked Preview by mistake, edit the variable and add Development too — this is
+   what Part G's `vercel env pull` relies on.
 
 This means: whenever you're just testing changes, your site quietly uses the
 staging/testing database. Only your final, live website (the "Production" one) uses
@@ -565,6 +579,17 @@ Do this before every future phase, and always before touching production. It
 connects your own computer to your **staging** Firebase project only — production
 data is never touched by this process.
 
+**Why this has to be `vercel dev` specifically, and not a plain static server:**
+this website uses clean web addresses (like `/about` or `/sermons` instead of
+`/src/pages/about/index.html`). The instructions for turning those clean addresses
+into the right file live in a file called `vercel.json`. A generic static file
+server (like the `serve` tool) has no idea `vercel.json` exists — it only shows you
+whatever's literally sitting in the folder you point it at, which is why it shows
+folder listings instead of your website. Only the Vercel CLI's own `vercel dev`
+command (or the real Vercel platform once deployed) understands and applies those
+`vercel.json` instructions, which is why it's the only correct way to run this
+project locally.
+
 ### G.1 — Make sure Node.js is installed
 
 1. Open Terminal and type: `node -v`
@@ -604,23 +629,47 @@ data is never touched by this process.
    vercel env pull .env.local
    ```
 2. This creates a file called `.env.local` with your **Development** environment
-   values (the staging Firebase config from Part C.3).
-3. Open `.env.local` and confirm `FIREBASE_PROJECT_ID` says `church-website-staging`
-   — **never test against the `-prod` project.**
+   values (the staging Firebase config from Part C.3). Note: this command always
+   pulls the **Development** environment by default — you never need to add
+   `--environment=preview` or any other flag for this project.
+3. Open `.env.local` and check two things:
+   - `FIREBASE_PROJECT_ID` says `church-website-staging` — **never test against
+     the `-prod` project.**
+   - The values are real (long strings/URLs), not the literal word `Sensitive`.
+
+   **If you see the word `Sensitive` instead of a real value:** go back to Part
+   C.3, step 6 — the "Sensitive" toggle was left on for that variable in Vercel's
+   dashboard. Edit that variable, turn Sensitive off, save, and run
+   `vercel env pull .env.local` again. Don't hand-edit `.env.local` to patch this —
+   it gets overwritten and un-fixed every time you run `vercel env pull` again, so
+   the toggle is the only permanent fix.
+
+   **If the file only contains `VERCEL_OIDC_TOKEN` and nothing else:** your
+   Firebase variables were never actually saved under the **Development** checkbox
+   in Vercel — go back to Part C.3, step 7, and add Development to each of them.
 
 ### G.6 — Make sure staging's rules and indexes are up to date
 
-New rules and indexes get added as more of the website is built, so re-deploy them
-before testing:
+New rules and indexes get added as more of the website is built. This command is
+always safe to re-run — it simply re-uploads whatever is in your local
+`firestore.rules`, `firestore.indexes.json`, and `storage.rules` files, so there's
+no need to first check whether anything changed:
 
 ```
 firebase use staging
-firebase deploy --only firestore:rules,firestore:indexes,storage:rules
+firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
+
+To check what's currently live without deploying anything, open the Firebase
+Console for your staging project → **Firestore Database → Rules** tab (and
+**Indexes** tab), and **Storage → Rules** tab — each shows the currently active
+rules and when they were last published.
 
 ### G.7 — Start your local server
 
-1. Type:
+1. Type this **exact command directly in the Terminal** — not `npm run dev` (this
+   project has no `dev` script in `package.json` on purpose; running the Vercel CLI
+   directly is the correct way to start local development for this project):
    ```
    vercel dev
    ```

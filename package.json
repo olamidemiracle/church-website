@@ -9,8 +9,7 @@
     "lint:fix": "eslint \"src/**/*.js\" \"functions/**/*.js\" --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "dev": "vercel dev",
-    "deploy:staging": "vercel --env-file=.env.staging",
+    "deploy:preview": "vercel",
     "deploy:prod": "vercel --prod",
     "bootstrap-admin": "node scripts/bootstrap-admin.cjs"
   },
