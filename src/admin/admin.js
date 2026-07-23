@@ -18,6 +18,7 @@ import {
   reRender,
   start,
 } from '../router/router.js';
+import { installGlobalErrorLogging } from '../utils/error-logger.js';
 import { renderLogin } from './login/login.js';
 import { renderForgotPassword } from './login/forgot-password.js';
 import { renderDashboard } from './dashboard/dashboard.js';
@@ -104,6 +105,8 @@ setGuard((route, authState) => {
   }
   return true;
 });
+
+installGlobalErrorLogging();
 
 let hasStartedRouter = false;
 

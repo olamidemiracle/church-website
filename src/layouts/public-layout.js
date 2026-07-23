@@ -19,6 +19,7 @@ import { renderHeader, initHeader } from '../components/header.js';
 import { renderFooter } from '../components/footer.js';
 import { getDocument } from '../services/firestore.service.js';
 import { renderInto } from '../utils/dom-helpers.js';
+import { installGlobalErrorLogging } from '../utils/error-logger.js';
 
 /**
  * Mounts header + footer. Returns the fetched settings document (or null
@@ -26,6 +27,8 @@ import { renderInto } from '../utils/dom-helpers.js';
  * same church-info fields (e.g. Home page's hero, Service Times page).
  */
 export async function mountPublicLayout() {
+  installGlobalErrorLogging();
+
   renderInto('#site-header', renderHeader());
   initHeader();
 

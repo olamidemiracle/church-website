@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Replace https://yourchurchdomain.org with your real domain once connected
+  (see SETUP_GUIDE.md Part C.6). This lists static routes only — dynamic
+  detail pages (sermons/detail?slug=..., events/detail?slug=..., etc.) use
+  query-string addressing rather than clean per-item URLs, so they aren't
+  well-suited to a static sitemap; consider a server-generated sitemap in
+  a future phase if per-sermon/per-event SEO indexing becomes a priority.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://yourchurchdomain.org/</loc><priority>1.0</priority></url>
+  <url><loc>https://yourchurchdomain.org/about</loc><priority>0.8</priority></url>
+  <url><loc>https://yourchurchdomain.org/about/history</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/about/vision-mission</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/about/beliefs</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/about/leadership</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/ministries</loc><priority>0.8</priority></url>
+  <url><loc>https://yourchurchdomain.org/sermons</loc><priority>0.8</priority></url>
+  <url><loc>https://yourchurchdomain.org/events</loc><priority>0.8</priority></url>
+  <url><loc>https://yourchurchdomain.org/gallery</loc><priority>0.5</priority></url>
+  <url><loc>https://yourchurchdomain.org/news</loc><priority>0.7</priority></url>
+  <url><loc>https://yourchurchdomain.org/service-times</loc><priority>0.9</priority></url>
+  <url><loc>https://yourchurchdomain.org/contact</loc><priority>0.7</priority></url>
+  <url><loc>https://yourchurchdomain.org/location</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/visit</loc><priority>0.9</priority></url>
+  <url><loc>https://yourchurchdomain.org/prayer-request</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/membership</loc><priority>0.6</priority></url>
+  <url><loc>https://yourchurchdomain.org/testimonies</loc><priority>0.5</priority></url>
+  <url><loc>https://yourchurchdomain.org/give</loc><priority>0.7</priority></url>
+  <url><loc>https://yourchurchdomain.org/privacy-policy</loc><priority>0.3</priority></url>
+  <url><loc>https://yourchurchdomain.org/terms</loc><priority>0.3</priority></url>
+</urlset>

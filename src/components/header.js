@@ -77,6 +77,7 @@ export function renderHeader() {
   }).join('');
 
   return `
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header" id="site-header-el">
       <div class="container site-header__inner">
         <a href="/" class="site-logo" aria-label="Go to homepage">

@@ -4,13 +4,31 @@ Public church website + admin dashboard. Built with HTML5, CSS3, Vanilla JavaScr
 
 ## Status
 
-**Phase 5 — Admin Auth + Shell.** The public site (Phases 1-4) is fully built:
-Home, About + subpages, Ministries, Sermons, Events, Gallery, News, Service Times,
-Contact, Location, Legal pages, and every public form (Prayer Request, Membership,
-Visit, Testimonies). The admin dashboard now has a working Login, Forgot Password,
-route guard, sidebar/topbar shell, and Dashboard Home with live stats. Admin CRUD
-modules (Manage Sermons, Manage Events, etc.) are Phase 6 — see `SETUP_GUIDE.md`
-Part F for how to create your first admin login.
+**Phase 9 — Polish.** The full site is built: public pages (Phases 1-4, 8), admin
+dashboard with auth, CRUD modules, submission views, and audit logging (Phases
+5-7), and Paystack-based online giving (Phase 8). This phase added SEO, accessibility,
+and performance polish across the whole site — see **Polish (Phase 9)** below.
+
+## Polish (Phase 9)
+
+- **SEO**: `public/robots.txt` and `public/sitemap.xml` (update the placeholder
+  domain in both once your real domain is connected — see Part C.6), JSON-LD
+  structured data (Schema.org `Church` on Home, `Event` on Event Detail,
+  `NewsArticle` on News Detail).
+- **Accessibility**: a skip-to-content link (visible on keyboard focus) on every
+  public page, verified every page has the `#main-content` target it jumps to.
+- **Favicon & theme color**: `public/favicon.svg` linked site-wide, plus a
+  `theme-color` meta tag matching the design tokens' ink-blue primary.
+- **Custom 404 page**: `404.html` at the repository root (not nested — this exact
+  name/location is a Vercel convention that serves it automatically, with a
+  correct HTTP 404 status, for any unmatched route).
+- **Error visibility**: `utils/error-logger.js` catches uncaught exceptions and
+  unhandled promise rejections site-wide (console-logged for now; the single call
+  site makes it easy to extend to a monitoring service later).
+- **Known follow-up**: `sitemap.xml` currently lists static routes only — dynamic
+  detail pages (sermon/event/news `?slug=` URLs) aren't included, since they'd need
+  a server-generated sitemap to stay accurate as content is added. Worth revisiting
+  if per-item SEO indexing becomes a priority.
 
 ## Admin Dashboard Architecture
 

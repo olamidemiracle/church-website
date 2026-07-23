@@ -15,8 +15,9 @@ import {
   createSubcollectionDocument,
 } from '../../../services/firestore.service.js';
 import { escapeHTML, getQueryParam, qs } from '../../../utils/dom-helpers.js';
-import { formatDate, formatTime, isPast } from '../../../utils/formatters.js';
+import { formatDate, formatTime, isPast, toDate } from '../../../utils/formatters.js';
 import { setPageMeta } from '../../../utils/seo.js';
+import { injectStructuredData } from '../../../utils/structured-data.js';
 import {
   validateForm,
   isRequired,
@@ -78,6 +79,23 @@ function renderEvent(target, event) {
   setPageMeta({
     title: `${title} | Events`,
     description: description || `Join us for ${title}.`,
+  });
+
+  const startDateObj = toDate(event.startDate);
+  const endDateObj = toDate(event.endDate);
+  injectStructuredData({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title || undefined,
+    description: event.description || undefined,
+    startDate: startDateObj ? startDateObj.toISOString() : undefined,
+    endDate: endDateObj ? endDateObj.toISOString() : undefined,
+    location: event.location
+      ? { '@type': 'Place', name: event.location, address: event.location }
+      : undefined,
+    image: event.imageUrl || undefined,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   });
 
   target.innerHTML = `

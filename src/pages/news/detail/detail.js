@@ -11,8 +11,9 @@
 import { mountPublicLayout } from '../../../layouts/public-layout.js';
 import { getDocumentByField } from '../../../services/firestore.service.js';
 import { escapeHTML, getQueryParam, qs } from '../../../utils/dom-helpers.js';
-import { formatDate } from '../../../utils/formatters.js';
+import { formatDate, toDate } from '../../../utils/formatters.js';
 import { setPageMeta } from '../../../utils/seo.js';
+import { injectStructuredData } from '../../../utils/structured-data.js';
 
 async function init() {
   await mountPublicLayout();
@@ -62,6 +63,17 @@ function renderArticle(target, article) {
   setPageMeta({
     title: `${title} | News`,
     description: (article.body || '').slice(0, 160),
+  });
+
+  const publishDateObj = toDate(article.publishDate);
+  injectStructuredData({
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title || undefined,
+    datePublished: publishDateObj ? publishDateObj.toISOString() : undefined,
+    author: article.author ? { '@type': 'Person', name: article.author } : undefined,
+    image: article.imageUrl || undefined,
+    articleBody: article.body || undefined,
   });
 
   target.innerHTML = `

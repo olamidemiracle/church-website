@@ -10,6 +10,7 @@
 import { mountPublicLayout } from '../../layouts/public-layout.js';
 import { getCollectionList } from '../../services/firestore.service.js';
 import { setPageMeta } from '../../utils/seo.js';
+import { injectStructuredData } from '../../utils/structured-data.js';
 import { escapeHTML, qs } from '../../utils/dom-helpers.js';
 
 setPageMeta({
@@ -19,8 +20,26 @@ setPageMeta({
 
 async function init() {
   const settings = await mountPublicLayout();
+  renderStructuredData(settings);
   renderServiceSnapshot(settings);
   await renderMinistriesPreview();
+}
+
+/** Emits Schema.org Church/Organization structured data from settings/general. */
+function renderStructuredData(settings) {
+  if (!settings) {
+    return;
+  }
+
+  injectStructuredData({
+    '@context': 'https://schema.org',
+    '@type': 'Church',
+    name: settings.churchName || undefined,
+    address: settings.address || undefined,
+    telephone: settings.phone || undefined,
+    email: settings.email || undefined,
+    url: window.location.origin,
+  });
 }
 
 /** Renders up to 4 upcoming service times from settings/general.serviceTimes[]. */
