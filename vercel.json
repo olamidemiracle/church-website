@@ -30,6 +30,7 @@
     { "source": "/membership", "destination": "/src/pages/membership/index.html" },
     { "source": "/visit", "destination": "/src/pages/visit/index.html" },
     { "source": "/testimonies", "destination": "/src/pages/testimonies/index.html" },
+    { "source": "/give", "destination": "/src/pages/give/index.html" },
     { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
   ]
 }

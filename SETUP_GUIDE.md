@@ -486,6 +486,70 @@ Key like a bank PIN.
    repeat steps 4–5 using the **Live** keys instead of Test keys, so real donations
    can be processed.
 
+### E.4 — Add your Public Key to Vercel
+
+1. Go back to your Vercel project → **Settings** → **Environment Variables** (same
+   place as Part C.3).
+2. Add `PAYSTACK_PUBLIC_KEY` the same way you added your other values — Production
+   gets your Live Public Key, Preview + Development get your Test Public Key.
+   **Sensitive should be off**, same as before — a public key is safe to expose.
+
+### E.5 — Store your Secret Key in Firebase (never in Vercel, never in a file)
+
+Your Secret Key is used only inside two Cloud Functions (`paystackWebhook` and
+`verifyDonation`) and is stored in Google's Secret Manager, completely separate
+from every other environment variable in this project.
+
+1. Open Terminal, move into your project folder.
+2. Make sure you're pointed at the right Firebase project:
+   ```
+   firebase use staging
+   ```
+   (repeat this whole section again later with `firebase use production` and your
+   Live Secret Key, once you're ready to go live)
+3. Type:
+   ```
+   firebase functions:secrets:set PAYSTACK_SECRET_KEY
+   ```
+4. It will prompt you to paste a value — paste your **Test Secret Key** (for
+   staging) and press Enter. The value won't be shown as you type/paste — that's
+   normal.
+
+### E.6 — Deploy your functions and get your webhook URL
+
+1. Type:
+   ```
+   cd functions
+   npm install
+   cd ..
+   firebase deploy --only functions
+   ```
+2. When it finishes, look through the output for a line mentioning
+   `paystackWebhook` — it will show a URL that looks something like
+   `https://paystackwebhook-xxxxxxxxxx-uc.a.run.app`. Copy that entire URL.
+
+### E.7 — Give Paystack your webhook URL
+
+1. Back in the Paystack Dashboard, go to **Settings** → **API Keys & Webhooks**.
+2. Find the **Webhook URL** field and paste the URL you copied in E.6.
+3. Click **Save**.
+
+This tells Paystack: "whenever a payment happens, call this address" — that's how
+your `donations` collection gets filled in automatically and reliably, even if the
+donor closes their browser right after paying.
+
+### E.8 — Test a real donation end-to-end
+
+1. Make sure you're testing against staging (Part G) and that Test Mode is on in
+   Paystack.
+2. Go to `/give` on your local site, fill in the form, and click **Give Now**.
+3. Paystack's test checkout will open. Use one of
+   [Paystack's official test cards](https://paystack.com/docs/payments/test-payments/)
+   to complete a fake payment.
+4. After paying, you should see a "Thank you" message on the page.
+5. Check your staging Firestore Console → `donations` collection — a new document
+   should appear, named after the transaction reference.
+
 ---
 
 # PART F — Create your first admin login
@@ -738,6 +802,11 @@ Go through this list and check off each box as you complete it:
 - [ ] EmailJS account, service, and template created; three codes written down and
       added to Vercel
 - [ ] Paystack account created; Test Public Key and Test Secret Key written down
+- [ ] `PAYSTACK_PUBLIC_KEY` added to Vercel environment variables
+- [ ] `PAYSTACK_SECRET_KEY` stored via `firebase functions:secrets:set` (staging)
+- [ ] Cloud Functions deployed and webhook URL copied
+- [ ] Webhook URL pasted into Paystack Dashboard settings
+- [ ] Test donation completed and confirmed in staging's `donations` collection
 - [ ] Blaze (pay-as-you-go) plan enabled on your Firebase project(s)
 - [ ] Cloud Functions deployed successfully
 - [ ] First admin user created in Firebase Authentication

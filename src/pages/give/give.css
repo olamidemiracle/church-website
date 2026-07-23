@@ -1,0 +1,33 @@
+/* Give page — amount preset buttons */
+
+.amount-presets {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+@media (min-width: 480px) {
+  .amount-presets {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.amount-preset-btn {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-weight: var(--font-weight-medium);
+  min-height: 44px;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.amount-preset-btn:hover {
+  border-color: var(--color-accent-500);
+}
+.amount-preset-btn.is-selected {
+  background-color: var(--color-accent-500);
+  border-color: var(--color-accent-500);
+  color: var(--color-primary-900);
+}

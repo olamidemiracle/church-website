@@ -9,9 +9,10 @@
  *   renderInto('#site-header', renderHeader());
  *   initHeader();
  *
- * Nav scope reflects pages that exist today (Phases 1-3). Give/Donate,
- * Livestream, Prayer Request, Membership, etc. will be added here once
- * those phases ship.
+ * Nav scope covers Phases 1-4 and 8. Prayer Request, Membership, Visit,
+ * and Testimonies exist but are kept footer-only by design (not primary
+ * nav items) to avoid an overcrowded menu. Livestream will be added here
+ * once that phase ships.
  * -----------------------------------------------------------------------
  */
 
@@ -35,6 +36,7 @@ const NAV_ITEMS = [
   { label: 'News', href: '/news' },
   { label: 'Service Times', href: '/service-times' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Give', href: '/give' },
 ];
 
 export function renderHeader() {
