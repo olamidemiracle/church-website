@@ -801,8 +801,8 @@ project.
 Two files still have a placeholder domain (`yourchurchdomain.org`) that needs to
 become your real one:
 
-1. Open `public/robots.txt` and replace the domain in the `Sitemap:` line.
-2. Open `public/sitemap.xml` and replace every `yourchurchdomain.org` with your
+1. Open `robots.txt` and replace the domain in the `Sitemap:` line.
+2. Open `sitemap.xml` and replace every `yourchurchdomain.org` with your
    real domain (find-and-replace works well here).
 3. Commit and push these changes so they go live.
 

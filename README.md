@@ -39,17 +39,26 @@ launch checklist.
 
 ## Polish (Phase 9)
 
-- **SEO**: `public/robots.txt` and `public/sitemap.xml` (update the placeholder
+- **SEO**: `robots.txt` and `sitemap.xml` (update the placeholder
   domain in both once your real domain is connected — see Part C.6 and Part H.2),
   JSON-LD structured data (Schema.org `Church` on Home, `Event` on Event Detail,
   `NewsArticle` on News Detail).
 - **Accessibility**: a skip-to-content link (visible on keyboard focus) on every
   public page, verified every page has the `#main-content` target it jumps to.
-- **Favicon & theme color**: `public/favicon.svg` linked site-wide, plus a
+- **Favicon & theme color**: `favicon.svg` linked site-wide, plus a
   `theme-color` meta tag matching the design tokens' ink-blue primary.
 - **Custom 404 page**: `404.html` at the repository root (not nested — this exact
   name/location is a Vercel convention that serves it automatically, with a
   correct HTTP 404 status, for any unmatched route).
+- **⚠️ `favicon.svg`, `robots.txt`, and `sitemap.xml` live at the repository
+  ROOT, not inside a `public/` folder.** This is deliberate, not an oversight:
+  Vercel's zero-config static builder treats a `public/` directory as the site's
+  Output Directory *if one exists* — meaning every route (including `/` itself
+  and even the custom `404.html` above) would silently resolve relative to
+  `public/` instead of the repo root, breaking every `vercel.json` rewrite with
+  no error message at all. **Never create a `public/` folder in this project** —
+  add any future static passthrough assets directly at the repository root
+  instead.
 - **Known follow-up**: `sitemap.xml` currently lists static routes only — dynamic
   detail pages (sermon/event/news `?slug=` URLs) aren't included, since they'd need
   a server-generated sitemap to stay accurate as content is added. Worth revisiting
