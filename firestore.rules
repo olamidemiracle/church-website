@@ -156,5 +156,15 @@ service cloud.firestore {
       allow create: if isEditor(); // any admin action can log itself
       allow update, delete: if false; // logs are append-only, never edited/deleted by clients
     }
+
+    // Client-side runtime error reports (see utils/error-logger.js). Any
+    // visitor's browser may encounter an error and log one — public
+    // create is intentional here, same pattern as the public form
+    // submission collections above. Only admins can read/manage them.
+    match /errorLogs/{docId} {
+      allow create: if true;
+      allow read: if isAdmin();
+      allow update, delete: if false; // append-only
+    }
   }
 }

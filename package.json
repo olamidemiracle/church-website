@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "deploy:preview": "vercel",
     "deploy:prod": "vercel --prod",
-    "bootstrap-admin": "node scripts/bootstrap-admin.cjs"
+    "bootstrap-admin": "node scripts/bootstrap-admin.cjs",
+    "migrate-staging-to-prod": "node scripts/migrate-staging-to-prod.cjs"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

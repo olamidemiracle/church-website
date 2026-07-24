@@ -289,3 +289,23 @@ export async function logActivity({
     console.error('[firestore] logActivity failed (non-blocking):', error);
   }
 }
+
+/**
+ * Records a client-side runtime error to the `errorLogs` collection, for
+ * admins to review via the Firebase Console (see utils/error-logger.js,
+ * the only caller). Deliberately non-throwing — an error while trying to
+ * log an error should never cascade.
+ */
+export async function logClientError({ message, source, stack, url }) {
+  try {
+    await addDoc(collection(db, 'errorLogs'), {
+      message: message || null,
+      source: source || null, // 'window.onerror' | 'unhandledrejection'
+      stack: stack ? String(stack).slice(0, 2000) : null, // cap size — this is a log, not a full report
+      url: url || (typeof window !== 'undefined' ? window.location.href : null),
+      timestamp: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error('[firestore] logClientError failed (non-blocking):', error);
+  }
+}

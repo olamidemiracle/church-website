@@ -4,16 +4,44 @@ Public church website + admin dashboard. Built with HTML5, CSS3, Vanilla JavaScr
 
 ## Status
 
-**Phase 9 — Polish.** The full site is built: public pages (Phases 1-4, 8), admin
-dashboard with auth, CRUD modules, submission views, and audit logging (Phases
-5-7), and Paystack-based online giving (Phase 8). This phase added SEO, accessibility,
-and performance polish across the whole site — see **Polish (Phase 9)** below.
+**🎉 Phase 10 — Launch Prep. The project is complete.** All ten phases are built:
+public site, admin dashboard (auth, CRUD modules, submission views, audit
+logging), Paystack-based online giving, SEO/accessibility/performance polish, and
+now launch preparation — backups, monitoring, an admin user guide, and a full
+launch checklist.
+
+**For day-to-day dashboard use**, see `ADMIN_USER_GUIDE.md`.
+**For all technical setup, deployment, and launch steps**, see `SETUP_GUIDE.md`
+(Part H is the final launch checklist).
+
+## Launch Prep (Phase 10)
+
+- **Backups**: `functions/scheduledFirestoreBackup` exports the entire Firestore
+  database to Cloud Storage every night at 3:00 AM automatically, under
+  `firestore-backups/` in your default Storage bucket. Requires one manual IAM
+  permission grant — see `SETUP_GUIDE.md` Part H.7.
+- **Monitoring**: Firebase Analytics now initializes automatically whenever
+  `FIREBASE_MEASUREMENT_ID` is set (optional — the site works identically without
+  it). Client-side runtime errors are both console-logged and persisted to a new
+  `errorLogs` Firestore collection (admin-readable only) via
+  `utils/error-logger.js`, so problems are visible without needing a separate
+  monitoring service.
+- **Admin User Guide**: `ADMIN_USER_GUIDE.md` — a complete, non-technical guide
+  for church staff covering login, every content module, every submission review
+  workflow, roles, and settings.
+- **Staging → production migration**: `scripts/migrate-staging-to-prod.cjs` — an
+  optional, safety-first tool (defaults to a dry run) for copying real content
+  from staging into production, for churches that built out real content while
+  testing rather than starting fresh in production.
+- **DNS/domain, going live**: fully covered in `SETUP_GUIDE.md` Part H, including
+  switching Paystack to Live mode, updating reCAPTCHA's allowed domains, and a
+  final go-live checklist.
 
 ## Polish (Phase 9)
 
 - **SEO**: `public/robots.txt` and `public/sitemap.xml` (update the placeholder
-  domain in both once your real domain is connected — see Part C.6), JSON-LD
-  structured data (Schema.org `Church` on Home, `Event` on Event Detail,
+  domain in both once your real domain is connected — see Part C.6 and Part H.2),
+  JSON-LD structured data (Schema.org `Church` on Home, `Event` on Event Detail,
   `NewsArticle` on News Detail).
 - **Accessibility**: a skip-to-content link (visible on keyboard focus) on every
   public page, verified every page has the `#main-content` target it jumps to.
@@ -22,9 +50,6 @@ and performance polish across the whole site — see **Polish (Phase 9)** below.
 - **Custom 404 page**: `404.html` at the repository root (not nested — this exact
   name/location is a Vercel convention that serves it automatically, with a
   correct HTTP 404 status, for any unmatched route).
-- **Error visibility**: `utils/error-logger.js` catches uncaught exceptions and
-  unhandled promise rejections site-wide (console-logged for now; the single call
-  site makes it easy to extend to a monitoring service later).
 - **Known follow-up**: `sitemap.xml` currently lists static routes only — dynamic
   detail pages (sermon/event/news `?slug=` URLs) aren't included, since they'd need
   a server-generated sitemap to stay accurate as content is added. Worth revisiting

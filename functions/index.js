@@ -13,3 +13,4 @@ admin.initializeApp();
 exports.setUserRole = require('./setUserRole').setUserRole;
 exports.paystackWebhook = require('./paystackWebhook').paystackWebhook;
 exports.verifyDonation = require('./verifyDonation').verifyDonation;
+exports.scheduledFirestoreBackup = require('./scheduledBackup').scheduledFirestoreBackup;

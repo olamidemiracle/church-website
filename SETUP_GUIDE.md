@@ -777,6 +777,140 @@ Press **Ctrl+C** in the Terminal window running `vercel dev`.
 
 ---
 
+# PART H — Launch checklist (going live for real)
+
+Do this once you're happy with everything in staging and are ready for the real
+public website to go live on your real domain, using your **production** Firebase
+project.
+
+### H.1 — Connect your real domain
+
+1. If you haven't already, buy a domain from any domain registrar (Namecheap,
+   GoDaddy, Google Domains, etc.).
+2. In Vercel, go to your project → **Settings** → **Domains**.
+3. Type your domain (e.g. `gracechapel.org`) and click **Add**.
+4. Vercel shows you one or two DNS records to add. Log in to wherever you bought
+   your domain, find its DNS settings page, and add exactly what Vercel showed
+   you.
+5. This can take a few minutes to a few hours to activate. Vercel automatically
+   handles HTTPS/SSL for you once it's connected — there's nothing extra to set
+   up for that.
+
+### H.2 — Update your domain in the files that reference it
+
+Two files still have a placeholder domain (`yourchurchdomain.org`) that needs to
+become your real one:
+
+1. Open `public/robots.txt` and replace the domain in the `Sitemap:` line.
+2. Open `public/sitemap.xml` and replace every `yourchurchdomain.org` with your
+   real domain (find-and-replace works well here).
+3. Commit and push these changes so they go live.
+
+### H.3 — Add your real domain to reCAPTCHA (App Check)
+
+Back in Part B.7, you registered `localhost` (and maybe a placeholder) as allowed
+domains for App Check's reCAPTCHA key. Now that you have a real domain:
+
+1. Go to **google.com/recaptcha/admin**, open your site's key settings.
+2. Under "Domains," add your real domain (e.g. `gracechapel.org` — add both with
+   and without `www` if you use both).
+3. Save.
+
+### H.4 — Switch Paystack to Live mode
+
+1. In the Paystack Dashboard, toggle from **Test Mode** to **Live Mode** (this
+   only works once your business verification from Part E.2 is approved).
+2. Go to **Settings → API Keys & Webhooks**, copy your **Live Public Key** and
+   **Live Secret Key**.
+3. In Vercel, update `PAYSTACK_PUBLIC_KEY` under the **Production** environment to
+   your Live Public Key.
+4. In Terminal:
+   ```
+   firebase use production
+   firebase functions:secrets:set PAYSTACK_SECRET_KEY
+   ```
+   paste your **Live Secret Key** when prompted.
+5. Redeploy functions so they pick up the new secret:
+   ```
+   firebase deploy --only functions
+   ```
+6. Copy the webhook URL again from that deploy's output (it's usually the same
+   URL as before, but confirm), and make sure it's saved in Paystack's webhook
+   settings.
+7. Make a small real donation yourself to confirm everything works end-to-end
+   before announcing online giving to your congregation.
+
+### H.5 — Deploy final production rules
+
+Make sure your production project has the latest rules and indexes:
+
+```
+firebase use production
+firebase deploy --only firestore:rules,firestore:indexes,storage
+```
+
+### H.6 — Create your production admin login
+
+If you haven't already, repeat Part F entirely against your **production**
+Firebase project (a staging login does not work on production — they're
+completely separate user systems).
+
+### H.7 — Turn on scheduled Firestore backups
+
+This project includes a Cloud Function that automatically backs up your entire
+database every night. It needs one manual permission granted first:
+
+1. Go to **console.cloud.google.com** and make sure your **production** Firebase
+   project is selected at the top.
+2. Go to **IAM & Admin → IAM** in the left-hand menu.
+3. Find the service account that ends in
+   `@<your-project-id>.iam.gserviceaccount.com` (there may be a couple — look for
+   one described as the "Default compute service account" or similar — if
+   unsure, add the role to all service accounts whose name includes your project
+   ID).
+4. Click the pencil/edit icon next to it, click **Add Another Role**, and search
+   for and select **Cloud Datastore Import Export Admin**.
+5. Click **Save**.
+6. Deploy functions if you haven't already in this session:
+   ```
+   firebase deploy --only functions
+   ```
+7. Backups now run automatically every night at 3:00 AM and are saved inside your
+   Firebase Storage bucket, under a folder called `firestore-backups`. You can see
+   them by going to Firebase Console → **Storage** → browsing into that folder.
+
+### H.8 — Decide what to do with your staging content
+
+Content you added in staging while testing (sample sermons, ministries, etc.)
+does **not** automatically appear in production — staging and production are
+completely separate databases. You have two options:
+
+- **Recommended for most churches:** just enter your real content directly into
+  production through the admin dashboard (see `ADMIN_USER_GUIDE.md`) — quick, and
+  you'll want to review everything for accuracy anyway before it's public.
+- **Optional, for advanced users:** if you built out a lot of real content in
+  staging and want to copy it over instead of retyping it, see
+  `scripts/migrate-staging-to-prod.cjs` — it defaults to a safe "dry run" that
+  only shows you what it would copy, and only touches content collections (never
+  private submissions like prayer requests).
+
+### H.9 — Final go-live check
+
+- [ ] Real domain connected and loading over HTTPS
+- [ ] `robots.txt` and `sitemap.xml` updated with your real domain
+- [ ] reCAPTCHA/App Check updated with your real domain
+- [ ] Paystack switched to Live mode, tested with a real small donation
+- [ ] Production Firestore/Storage rules deployed
+- [ ] Production admin login created and tested
+- [ ] Scheduled backups permission granted and functions deployed
+- [ ] Real content entered (or migrated) into production
+- [ ] Every admin who needs one has a login (see `ADMIN_USER_GUIDE.md` Part F for
+      how to create more)
+
+Once every box above is checked, your church website is fully live. 🎉
+
+---
+
 ## Final Checklist
 
 Go through this list and check off each box as you complete it:
@@ -815,6 +949,14 @@ Go through this list and check off each box as you complete it:
 - [ ] Successfully logged in at `/admin/login` and saw the Dashboard
 - [ ] Tested the whole site locally with `vercel dev` against staging
 - [ ] Confirmed test form submissions appeared correctly in staging's Firestore
+- [ ] Real domain connected in Vercel with HTTPS working
+- [ ] `robots.txt` and `sitemap.xml` updated with your real domain
+- [ ] reCAPTCHA/App Check domains updated with your real domain
+- [ ] Paystack switched to Live mode and tested with a real donation
+- [ ] Production Firestore/Storage rules and functions deployed
+- [ ] Production admin login created
+- [ ] Scheduled backups IAM permission granted
+- [ ] Real content entered into production
 
-Once every box is checked, message me and we'll move on to **Phase 2 — building the
-actual pages of your website.**
+Once every box above is checked, your website is ready to launch — see
+`ADMIN_USER_GUIDE.md` for day-to-day use of the admin dashboard from here on.

@@ -38,6 +38,9 @@ const { getStorage } = await import(
 const { initializeAppCheck, ReCaptchaV3Provider } = await import(
   `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app-check.js`
 );
+const { getAnalytics, isSupported: isAnalyticsSupported } = await import(
+  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-analytics.js`
+);
 
 const firebaseConfig = {
   apiKey: getEnv('FIREBASE_API_KEY'),
@@ -70,4 +73,23 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export { app, auth, db, storage, appCheck };
+// Analytics (Phase 9/10 monitoring) — only initialized when a
+// measurementId is configured AND the current environment actually
+// supports it (isSupported() returns false in some browsers/contexts,
+// e.g. private browsing modes without IndexedDB — calling getAnalytics()
+// anyway would throw). Optional by design: the site works identically
+// whether or not FIREBASE_MEASUREMENT_ID is set.
+let analytics;
+if (typeof window !== 'undefined' && getEnv('FIREBASE_MEASUREMENT_ID')) {
+  isAnalyticsSupported()
+    .then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app);
+      }
+    })
+    .catch(() => {
+      // Analytics is a nice-to-have — never let its absence break the app.
+    });
+}
+
+export { app, auth, db, storage, appCheck, analytics };
