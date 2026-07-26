@@ -9,7 +9,7 @@
  *    off of
  *  - a single onAuthChange subscription used by the router's route guard
  *
- * Custom claims are set server-side only (see functions/setUserRole.js) —
+ * Custom claims are set server-side only (see api/set-user-role.js) —
  * this file never attempts to set them from the client.
  * -----------------------------------------------------------------------
  */

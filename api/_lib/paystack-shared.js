@@ -1,20 +1,21 @@
 /**
- * functions/paystack-shared.js
+ * api/_lib/paystack-shared.js
  * -----------------------------------------------------------------------
- * Shared logic between paystackWebhook.js (Paystack calling us) and
- * verifyDonation.js (our client calling us right after checkout). Both
- * paths write to the same `donations/{reference}` document — using the
- * Paystack transaction reference as the Firestore document ID makes this
- * naturally idempotent, so it doesn't matter which path arrives first,
- * or if Paystack retries the same webhook delivery multiple times.
+ * Shared logic between api/paystack-webhook.js (Paystack calling us) and
+ * api/verify-donation.js (our client calling us right after checkout).
+ * Ported from the original functions/paystack-shared.js with no logic
+ * changes — both paths still write to the same `donations/{reference}`
+ * document, keyed by the Paystack transaction reference, which is what
+ * makes this naturally idempotent regardless of which path arrives
+ * first or whether Paystack retries a webhook delivery.
  * -----------------------------------------------------------------------
  */
 
-const crypto = require('crypto');
-const admin = require('firebase-admin');
+import crypto from 'crypto';
+import { getDb, getFieldValue } from './firebase-admin.js';
 
 /** Verifies a Paystack webhook's `x-paystack-signature` header against the raw request body. */
-function isValidPaystackSignature(rawBody, signatureHeader, secretKey) {
+export function isValidPaystackSignature(rawBody, signatureHeader, secretKey) {
   if (!signatureHeader) {
     return false;
   }
@@ -24,8 +25,6 @@ function isValidPaystackSignature(rawBody, signatureHeader, secretKey) {
   const signatureBuffer = Buffer.from(signatureHeader, 'hex');
   const expectedBuffer = Buffer.from(expected, 'hex');
 
-  // Buffers of different lengths would throw inside timingSafeEqual, so
-  // check length first rather than let that surface as a 500 error.
   if (signatureBuffer.length !== expectedBuffer.length) {
     return false;
   }
@@ -33,16 +32,15 @@ function isValidPaystackSignature(rawBody, signatureHeader, secretKey) {
   return crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
 }
 
-/** Upserts a donations/{reference} document from a Paystack transaction object (webhook payload's `data`, or a verify response's `data`). */
-async function upsertDonationFromTransaction(transaction, source) {
+/** Upserts a donations/{reference} document from a Paystack transaction object. */
+export async function upsertDonationFromTransaction(transaction, source) {
   const donorName =
     transaction.metadata?.donorName ||
     (transaction.customer?.first_name
       ? `${transaction.customer.first_name} ${transaction.customer.last_name || ''}`.trim()
       : null);
 
-  await admin
-    .firestore()
+  await getDb()
     .collection('donations')
     .doc(String(transaction.reference))
     .set(
@@ -56,11 +54,9 @@ async function upsertDonationFromTransaction(transaction, source) {
         reference: transaction.reference,
         date: transaction.paid_at
           ? new Date(transaction.paid_at)
-          : admin.firestore.FieldValue.serverTimestamp(),
-        source, // 'webhook' | 'client-verify' — useful for debugging which path recorded it
+          : getFieldValue().serverTimestamp(),
+        source, // 'webhook' | 'client-verify'
       },
       { merge: true }
     );
 }
-
-module.exports = { isValidPaystackSignature, upsertDonationFromTransaction };

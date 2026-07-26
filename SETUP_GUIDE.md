@@ -180,11 +180,12 @@ once for each.
    - `apiKey` → write as **FIREBASE_API_KEY**
    - `authDomain` → write as **FIREBASE_AUTH_DOMAIN**
    - `projectId` → write as **FIREBASE_PROJECT_ID**
-   - `storageBucket` → write as **FIREBASE_STORAGE_BUCKET**
    - `messagingSenderId` → write as **FIREBASE_MESSAGING_SENDER_ID**
    - `appId` → write as **FIREBASE_APP_ID**
    - `measurementId` → write as **FIREBASE_MEASUREMENT_ID** (may not exist if you
      turned off Analytics — that's fine, leave it blank)
+   - You can ignore any `storageBucket` line shown — this project uses
+     Cloudinary for file storage, not Firebase Storage (see Part B.6).
 6. Click **Continue to console**.
 
 ### B.4 — Turn on sign-in for the admin dashboard (Authentication)
@@ -206,12 +207,35 @@ once for each.
    **Enable**.
 5. Wait for it to finish setting up.
 
-### B.6 — Turn on file storage (for photos, sermon audio, PDFs)
+### B.6 — Set up Cloudinary (file storage — not a Firebase step)
 
-1. On the left-hand menu, under **Build**, click **Storage**.
-2. Click **Get started**.
-3. Choose **Production mode**, click **Next**.
-4. Confirm the same location as before, click **Done**.
+This project stores uploaded files (photos, sermon audio, PDFs) in
+**Cloudinary** instead of Firebase Storage, since Firebase now requires a
+paid billing plan for file storage. Cloudinary's free plan needs no billing
+information at all. This is a separate account from Firebase — you'll only
+need to do this once (not once per Firebase project).
+
+1. Go to **cloudinary.com** and click **Sign up for free**.
+2. Create your account (email/password, or continue with Google).
+3. Once logged in, you'll land on your **Dashboard** — copy the **Cloud
+   Name** shown near the top. Write it down as **CLOUDINARY_CLOUD_NAME**.
+4. Click the gear/**Settings** icon, then the **Upload** tab.
+5. Scroll to **Upload presets** and click **Add upload preset**.
+6. Set **Signing Mode** to **Unsigned** (this is what allows the website to
+   upload directly from the browser without needing a server secret for
+   every upload).
+7. Give it a name you'll recognize, e.g. `church_website_uploads` — write
+   this down as **CLOUDINARY_UPLOAD_PRESET**.
+8. (Optional but recommended) Under this same preset's settings, set a
+   reasonable **Max file size** and restrict **Allowed formats** to the
+   types you'll actually use (e.g. jpg, png, webp, mp3, pdf) — this limits
+   what a compromised or malicious upload could send.
+9. Click **Save**.
+10. Still in Settings, click the **API Keys** tab. Copy the **API Key** and
+    **API Secret** — write these down as **CLOUDINARY_API_KEY** and
+    **CLOUDINARY_API_SECRET**. Unlike the Cloud Name and Upload Preset,
+    these two are **secret** — they'll only ever go into Vercel's
+    environment variables, never anywhere client-facing.
 
 ### B.7 — Turn on spam protection (App Check)
 
@@ -249,15 +273,18 @@ once for each.
 
 ### B.9 — Repeat everything in Part B for your SECOND (production) project
 
-Go all the way back to step B.2 and do steps B.2 through B.8 again, but this time:
+Go all the way back to step B.2 and do steps B.2 through B.5, then B.7 and B.8
+again, but this time:
 
 - Name the project `church-website-prod` instead.
 - Write down its config values with the same labels as before, but keep them in a
   **separate list** clearly marked "PRODUCTION" so you never mix them up with
   staging.
+- **Skip step B.6 (Cloudinary)** — that's one account shared by both your staging
+  and production sites, not a per-Firebase-project step. You already did it once.
 
 You should now have two full sets of Firebase values written down — one labeled
-STAGING, one labeled PRODUCTION.
+STAGING, one labeled PRODUCTION — plus one shared set of Cloudinary values.
 
 ### B.10 — Publish the security rules that were already written for you
 
@@ -291,10 +318,12 @@ This step uses the Terminal again (see Part A.4 for how to open it).
    `production`, press Enter.
 6. Finally, type this and press Enter:
    ```
-   firebase deploy --only firestore:rules,storage
+   firebase deploy --only firestore:rules
    ```
    Wait for it to say "Deploy complete!" This has now safely locked down both your
    staging and production databases using the rules already prepared for you.
+   (There's no Storage rules step here — file storage now lives in Cloudinary,
+   which manages access on its own side via the upload preset from Part B.6.)
 
 ---
 
@@ -338,23 +367,33 @@ putting the codes directly into files anyone could see.
    `FIREBASE_API_KEY` a second time), check only the **Preview** and **Development**
    boxes, then click **Add**.
 5. Repeat this for every value: `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`,
-   `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID`,
+   `FIREBASE_PROJECT_ID`, `FIREBASE_MESSAGING_SENDER_ID`,
    `FIREBASE_APP_ID`, `FIREBASE_MEASUREMENT_ID`, and
    `APP_CHECK_RECAPTCHA_SITE_KEY`.
 6. **⚠️ Important — look for a toggle or checkbox labeled "Sensitive" on the Add
    Environment Variable form.** Vercel now defaults new Production/Preview variables
    to "Sensitive," which means their value can never be read back — not in the
    dashboard, and not by the `vercel env pull` command you'll use in Part G. **Turn
-   this OFF for every variable above.** None of these values are actually secret —
-   a Firebase web app's config is safe to expose publicly by design (the real
-   security boundary is Firestore/Storage Security Rules, not hiding this config) —
-   so there's no downside to keeping "Sensitive" off, and it's required for local
-   testing to work.
+   this OFF for every variable in this guide, including the ones later in Part E
+   and Part B.6** — the real protection for anything genuinely secret (like your
+   Cloudinary API Secret or Paystack Secret Key) is that it's never added to
+   `api/env.js`'s public list, not Vercel's Sensitive toggle. Firebase's web app
+   config specifically isn't secret at all — its real security boundary is
+   Firestore Security Rules, not hiding this config.
 7. After adding everything, go to the Environment Variables list and double-check:
    click each Firebase-related variable and confirm the **Development** checkbox is
    ticked for your staging values specifically (not just Preview). If you only
    checked Preview by mistake, edit the variable and add Development too — this is
    what Part G's `vercel env pull` relies on.
+8. Now add your **Cloudinary** values from Part B.6 — since it's one shared
+   account (not staging/production-specific), check **all three boxes**
+   (Production, Preview, Development) together for each of these:
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_UPLOAD_PRESET`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
+
+   (Sensitive off for all four, same reasoning as step 6.)
 
 This means: whenever you're just testing changes, your site quietly uses the
 staging/testing database. Only your final, live website (the "Production" one) uses
@@ -494,51 +533,57 @@ Key like a bank PIN.
    gets your Live Public Key, Preview + Development get your Test Public Key.
    **Sensitive should be off**, same as before — a public key is safe to expose.
 
-### E.5 — Store your Secret Key in Firebase (never in Vercel, never in a file)
+### E.5 — Add your Secret Key to Vercel (server-only, never in a file you commit)
 
-Your Secret Key is used only inside two Cloud Functions (`paystackWebhook` and
-`verifyDonation`) and is stored in Google's Secret Manager, completely separate
-from every other environment variable in this project.
+Your Secret Key is used only inside two server-side routes
+(`api/paystack-webhook.js` and `api/verify-donation.js`) and is read directly
+from a Vercel environment variable — there's no separate Secret Manager
+system to configure (that was only needed for the project's original Firebase
+Cloud Functions version).
 
-1. Open Terminal, move into your project folder.
-2. Make sure you're pointed at the right Firebase project:
-   ```
-   firebase use staging
-   ```
-   (repeat this whole section again later with `firebase use production` and your
-   Live Secret Key, once you're ready to go live)
-3. Type:
-   ```
-   firebase functions:secrets:set PAYSTACK_SECRET_KEY
-   ```
-4. It will prompt you to paste a value — paste your **Test Secret Key** (for
-   staging) and press Enter. The value won't be shown as you type/paste — that's
-   normal.
+1. Go to your Vercel project → **Settings** → **Environment Variables** (same
+   place as Part C.3).
+2. Add `PAYSTACK_SECRET_KEY`:
+   - For now, check **Preview** and **Development**, and paste your **Test
+     Secret Key**.
+   - You'll add the **Production** row with your **Live Secret Key** later, in
+     Part H.4, once your business verification is approved.
+   - **Sensitive off**, same reasoning as every other variable in this guide —
+     this key is never added to `api/env.js`'s public list, so it never
+     reaches the browser regardless of this toggle.
 
-### E.6 — Deploy your functions and get your webhook URL
+### E.6 — Understand your webhook URL
 
-1. Type:
-   ```
-   cd functions
-   npm install
-   cd ..
-   firebase deploy --only functions
-   ```
-2. When it finishes, look through the output for a line mentioning
-   `paystackWebhook` — it will show a URL that looks something like
-   `https://paystackwebhook-xxxxxxxxxx-uc.a.run.app`. Copy that entire URL.
+Unlike the original Firebase Cloud Functions version, there's no separate
+deploy step for this — `api/paystack-webhook.js` goes live automatically the
+moment the rest of your site deploys (the same as every other page). Your
+webhook URL is simply:
 
-### E.7 — Give Paystack your webhook URL
+```
+https://<your-site's-address>/api/paystack-webhook
+```
+
+For your **production** domain, this URL is stable and permanent (see Part
+H.1). For **Preview** deployments (used while testing), Vercel gives every
+deployment its own changing URL, so there isn't one fixed staging webhook URL
+to give Paystack — that's fine: local/staging testing (Part E.8 below) relies
+on `api/verify-donation.js` instead, which works everywhere, including on
+`localhost` where Paystack's servers couldn't reach a webhook anyway. Come
+back to Part H.4 to configure the real, stable webhook URL once you're live.
+
+### E.7 — Give Paystack your webhook URL (once you have a stable one)
 
 1. Back in the Paystack Dashboard, go to **Settings** → **API Keys & Webhooks**.
-2. Find the **Webhook URL** field and paste the URL you copied in E.6.
+2. Find the **Webhook URL** field and paste your production URL from E.6
+   (`https://<your-real-domain>/api/paystack-webhook`).
 3. Click **Save**.
 
-This tells Paystack: "whenever a payment happens, call this address" — that's how
-your `donations` collection gets filled in automatically and reliably, even if the
-donor closes their browser right after paying.
+This tells Paystack: "whenever a payment happens, call this address" — that's
+how your `donations` collection gets filled in automatically and reliably,
+even if the donor closes their browser right after paying. (This step is
+repeated, with your Live keys, in Part H.4 when you actually go live.)
 
-### E.8 — Test a real donation end-to-end
+### E.8 — Test a donation locally
 
 1. Make sure you're testing against staging (Part G) and that Test Mode is on in
    Paystack.
@@ -546,7 +591,11 @@ donor closes their browser right after paying.
 3. Paystack's test checkout will open. Use one of
    [Paystack's official test cards](https://paystack.com/docs/payments/test-payments/)
    to complete a fake payment.
-4. After paying, you should see a "Thank you" message on the page.
+4. After paying, you should see a "Thank you" message on the page — this
+   confirms `api/verify-donation.js` worked. (The webhook won't fire during
+   local testing, since Paystack can't reach `localhost` — that's expected and
+   fine; verify-donation alone is enough to confirm everything's wired up
+   correctly.)
 5. Check your staging Firestore Console → `donations` collection — a new document
    should appear, named after the transaction reference.
 
@@ -559,33 +608,7 @@ up through the website itself (that's on purpose — random visitors shouldn't b
 to create themselves an admin account). This part walks through creating your very
 first admin login, once, by hand.
 
-### F.1 — Turn on billing on your Firebase project (required for Cloud Functions)
-
-1. Go to **console.firebase.google.com** and open your **production** project
-   (`church-website-prod`).
-2. Click the gear icon (top-left) → **Usage and billing**.
-3. Click **Modify plan** and switch to the **Blaze (pay as you go)** plan. This is
-   required to use Cloud Functions, but Google gives a generous free monthly amount,
-   and a small church site is very unlikely to be charged anything meaningful.
-4. Repeat for your **staging** project too, if you want Cloud Functions to work there
-   as well.
-
-### F.2 — Deploy the Cloud Functions
-
-1. Open the Terminal (see Part A.4) and move into your project folder.
-2. Type this and press Enter to install the Cloud Functions' own dependencies:
-   ```
-   cd functions
-   npm install
-   cd ..
-   ```
-3. Type this and press Enter:
-   ```
-   firebase deploy --only functions
-   ```
-4. Wait for it to finish — you'll see a checkmark and a URL when it succeeds.
-
-### F.3 — Create your first admin user
+### F.1 — Create your first admin user
 
 1. In the Firebase Console (production project), click **Build** → **Authentication**
    in the left-hand menu.
@@ -595,7 +618,7 @@ first admin login, once, by hand.
 4. This person can now technically log in, but doesn't have admin permissions yet —
    the next steps fix that.
 
-### F.4 — Download a service account key (used only on your own computer)
+### F.2 — Download a service account key (used on your own computer AND in Vercel)
 
 1. In the Firebase Console, click the gear icon → **Project settings**.
 2. Click the **Service accounts** tab.
@@ -605,14 +628,36 @@ first admin login, once, by hand.
    this file anywhere or add it to GitHub. It grants full admin access to your
    Firebase project.
 
-### F.5 — Run the bootstrap script to make that user a superadmin
+### F.3 — Give this key to Vercel too (needed by the admin-related server routes)
+
+A few server-side routes (`api/set-user-role.js`, `api/delete-media.js`,
+`api/scheduled-backup.js`) need this same key to manage users and read your
+database from Vercel's servers. Vercel environment variables are plain text
+boxes, so the key needs to be squeezed onto one line first:
+
+1. Open Terminal, and run one of these (whichever matches your computer) to
+   base64-encode the file — replacing the path with wherever you saved it in F.2:
+   - **Mac/Linux**: `base64 -i /path/to/your-key.json | pbcopy` (this copies the
+     result straight to your clipboard)
+   - **Windows (PowerShell)**:
+     `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\your-key.json")) | Set-Clipboard`
+2. Go to your Vercel project → **Settings** → **Environment Variables**.
+3. Add a new variable named `FIREBASE_SERVICE_ACCOUNT_BASE64`, paste the copied
+   value, check **all three** environment boxes (Production, Preview,
+   Development), and leave **Sensitive off** (same reasoning as every other
+   variable in this guide — this key is read only inside `/api` routes via
+   `process.env`, and is never added to `api/env.js`'s public list, so it never
+   reaches the browser).
+4. Click **Save**.
+
+### F.4 — Run the bootstrap script to make that user a superadmin
 
 1. In the Terminal, make sure you're inside your project folder, then type:
    ```
    npm install
    ```
 2. Now type the following, replacing the file path with wherever you saved the
-   `.json` key in step F.4, and the email with the one you used in step F.3:
+   `.json` key in step F.2, and the email with the one you used in step F.1:
    ```
    npm run bootstrap-admin -- /path/to/your-key.json admin@yourchurch.org
    ```
@@ -620,13 +665,15 @@ first admin login, once, by hand.
    after typing `bootstrap-admin -- ` to fill in its exact path automatically.)
 3. You should see a message like `✅ admin@yourchurch.org is now a superadmin.`
 4. **Delete the `.json` key file from your computer once you're done with it**, or
-   move it somewhere private and backed up — treat it like a master password.
+   move it somewhere private and backed up — treat it like a master password. (The
+   copy inside Vercel from F.3 stays there safely — this is just about the loose
+   file on your own computer.)
 
-### F.6 — Log in
+### F.5 — Log in
 
 1. Go to `https://yoursite.vercel.app/admin/login` (or your real domain once
    connected).
-2. Enter the email and password from step F.3.
+2. Enter the email and password from step F.1.
 3. You should land on the Admin Dashboard, showing counts of new prayer requests,
    pending membership applications, unread messages, and testimonies awaiting
    review.
@@ -716,18 +763,19 @@ project locally.
 
 New rules and indexes get added as more of the website is built. This command is
 always safe to re-run — it simply re-uploads whatever is in your local
-`firestore.rules`, `firestore.indexes.json`, and `storage.rules` files, so there's
+`firestore.rules` and `firestore.indexes.json` files, so there's
 no need to first check whether anything changed:
 
 ```
 firebase use staging
-firebase deploy --only firestore:rules,firestore:indexes,storage
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
 To check what's currently live without deploying anything, open the Firebase
 Console for your staging project → **Firestore Database → Rules** tab (and
-**Indexes** tab), and **Storage → Rules** tab — each shows the currently active
-rules and when they were last published.
+**Indexes** tab) — each shows the currently active rules and when they were
+last published. (There's no Storage rules step here — file storage now lives
+in Cloudinary, configured back in Part B.6.)
 
 ### G.7 — Start your local server
 
@@ -822,22 +870,18 @@ domains for App Check's reCAPTCHA key. Now that you have a real domain:
    only works once your business verification from Part E.2 is approved).
 2. Go to **Settings → API Keys & Webhooks**, copy your **Live Public Key** and
    **Live Secret Key**.
-3. In Vercel, update `PAYSTACK_PUBLIC_KEY` under the **Production** environment to
-   your Live Public Key.
-4. In Terminal:
+3. In Vercel, add the **Production** row for `PAYSTACK_PUBLIC_KEY` with your
+   Live Public Key, and the **Production** row for `PAYSTACK_SECRET_KEY` with
+   your Live Secret Key (Sensitive off, same as always).
+4. Redeploy your site so the new values take effect:
    ```
-   firebase use production
-   firebase functions:secrets:set PAYSTACK_SECRET_KEY
+   vercel --prod
    ```
-   paste your **Live Secret Key** when prompted.
-5. Redeploy functions so they pick up the new secret:
-   ```
-   firebase deploy --only functions
-   ```
-6. Copy the webhook URL again from that deploy's output (it's usually the same
-   URL as before, but confirm), and make sure it's saved in Paystack's webhook
-   settings.
-7. Make a small real donation yourself to confirm everything works end-to-end
+   (or just push to `main` — either triggers a fresh production deployment)
+5. Your webhook URL is now live and stable at
+   `https://<your-real-domain>/api/paystack-webhook` — paste it into Paystack's
+   webhook settings if you haven't already (Part E.7).
+6. Make a small real donation yourself to confirm everything works end-to-end
    before announcing online giving to your congregation.
 
 ### H.5 — Deploy final production rules
@@ -846,7 +890,7 @@ Make sure your production project has the latest rules and indexes:
 
 ```
 firebase use production
-firebase deploy --only firestore:rules,firestore:indexes,storage
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
 ### H.6 — Create your production admin login
@@ -855,29 +899,25 @@ If you haven't already, repeat Part F entirely against your **production**
 Firebase project (a staging login does not work on production — they're
 completely separate user systems).
 
-### H.7 — Turn on scheduled Firestore backups
+### H.7 — Confirm scheduled backups are running
 
-This project includes a Cloud Function that automatically backs up your entire
-database every night. It needs one manual permission granted first:
+Scheduled backups need no manual permission-granting step (unlike the
+project's original Firebase Cloud Functions version, which needed a special
+IAM role) — `api/scheduled-backup.js` starts running automatically the moment
+your site is deployed, as long as:
 
-1. Go to **console.cloud.google.com** and make sure your **production** Firebase
-   project is selected at the top.
-2. Go to **IAM & Admin → IAM** in the left-hand menu.
-3. Find the service account that ends in
-   `@<your-project-id>.iam.gserviceaccount.com` (there may be a couple — look for
-   one described as the "Default compute service account" or similar — if
-   unsure, add the role to all service accounts whose name includes your project
-   ID).
-4. Click the pencil/edit icon next to it, click **Add Another Role**, and search
-   for and select **Cloud Datastore Import Export Admin**.
-5. Click **Save**.
-6. Deploy functions if you haven't already in this session:
-   ```
-   firebase deploy --only functions
-   ```
-7. Backups now run automatically every night at 3:00 AM and are saved inside your
-   Firebase Storage bucket, under a folder called `firestore-backups`. You can see
-   them by going to Firebase Console → **Storage** → browsing into that folder.
+1. `CRON_SECRET` is set in Vercel's environment variables (**all three**
+   environments — Production, Preview, Development). If you haven't added it
+   yet: **Settings → Environment Variables → Add** — name it `CRON_SECRET`,
+   value can be any long random string you make up (e.g. mash your keyboard for
+   30+ characters), Sensitive off.
+2. Your Cloudinary environment variables from Part B.6/C.3 are set.
+3. Check **Settings → Cron Jobs** in your Vercel project — you should see
+   `/api/scheduled-backup` listed, scheduled for `0 3 * * *` (3:00 AM daily).
+4. Backups are saved to your Cloudinary account under a folder called
+   `firestore-backups` — you can see them by logging into Cloudinary and
+   browsing your Media Library into that folder. Each one is a `.json` file
+   named with its backup timestamp.
 
 ### H.8 — Decide what to do with your staging content
 
@@ -900,9 +940,9 @@ completely separate databases. You have two options:
 - [ ] `robots.txt` and `sitemap.xml` updated with your real domain
 - [ ] reCAPTCHA/App Check updated with your real domain
 - [ ] Paystack switched to Live mode, tested with a real small donation
-- [ ] Production Firestore/Storage rules deployed
+- [ ] Production Firestore rules deployed
 - [ ] Production admin login created and tested
-- [ ] Scheduled backups permission granted and functions deployed
+- [ ] `CRON_SECRET` set and scheduled backup confirmed in Vercel's Cron Jobs list
 - [ ] Real content entered (or migrated) into production
 - [ ] Every admin who needs one has a login (see `ADMIN_USER_GUIDE.md` Part F for
       how to create more)
@@ -922,8 +962,10 @@ Go through this list and check off each box as you complete it:
 - [ ] Branch protection turned on for `main`
 - [ ] Google/Firebase account created
 - [ ] `church-website-staging` project created with Authentication, Firestore,
-      Storage, and App Check all turned on
-- [ ] `church-website-prod` project created with the same four things turned on
+      and App Check all turned on
+- [ ] `church-website-prod` project created with the same three things turned on
+- [ ] Cloudinary account created; unsigned upload preset configured; Cloud Name,
+      Upload Preset, API Key, and API Secret written down
 - [ ] All Firebase values written down for both staging and production, clearly
       labeled
 - [ ] `settings/general` document created in both Firebase projects
@@ -931,20 +973,20 @@ Go through this list and check off each box as you complete it:
 - [ ] Vercel account created and linked to GitHub
 - [ ] Project imported into Vercel
 - [ ] All environment variables added (Production values under Production, staging
-      values under Preview/Development)
+      values under Preview/Development; Cloudinary values under all three)
 - [ ] Site successfully deployed and visited at its `.vercel.app` address
 - [ ] EmailJS account, service, and template created; three codes written down and
       added to Vercel
 - [ ] Paystack account created; Test Public Key and Test Secret Key written down
-- [ ] `PAYSTACK_PUBLIC_KEY` added to Vercel environment variables
-- [ ] `PAYSTACK_SECRET_KEY` stored via `firebase functions:secrets:set` (staging)
-- [ ] Cloud Functions deployed and webhook URL copied
-- [ ] Webhook URL pasted into Paystack Dashboard settings
+- [ ] `PAYSTACK_PUBLIC_KEY` and `PAYSTACK_SECRET_KEY` added to Vercel environment
+      variables
+- [ ] Webhook URL noted (stable once a real domain is connected) and pasted into
+      Paystack Dashboard settings
 - [ ] Test donation completed and confirmed in staging's `donations` collection
-- [ ] Blaze (pay-as-you-go) plan enabled on your Firebase project(s)
-- [ ] Cloud Functions deployed successfully
 - [ ] First admin user created in Firebase Authentication
-- [ ] Service account key downloaded and bootstrap script run successfully
+- [ ] Service account key downloaded, base64-encoded, and added to Vercel as
+      `FIREBASE_SERVICE_ACCOUNT_BASE64`
+- [ ] Bootstrap script run successfully to create the first superadmin
 - [ ] Service account key file deleted or moved somewhere private afterward
 - [ ] Successfully logged in at `/admin/login` and saw the Dashboard
 - [ ] Tested the whole site locally with `vercel dev` against staging
@@ -953,9 +995,9 @@ Go through this list and check off each box as you complete it:
 - [ ] `robots.txt` and `sitemap.xml` updated with your real domain
 - [ ] reCAPTCHA/App Check domains updated with your real domain
 - [ ] Paystack switched to Live mode and tested with a real donation
-- [ ] Production Firestore/Storage rules and functions deployed
+- [ ] Production Firestore rules deployed
 - [ ] Production admin login created
-- [ ] Scheduled backups IAM permission granted
+- [ ] `CRON_SECRET` set in Vercel and scheduled backup confirmed in Cron Jobs list
 - [ ] Real content entered into production
 
 Once every box above is checked, your website is ready to launch — see

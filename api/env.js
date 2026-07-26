@@ -10,9 +10,12 @@
  *
  * Only variables that are safe for a browser to see are exposed here —
  * these are all designed to be public (Firebase web config is not a
- * secret; it's scoped by Firestore/Storage Security Rules, not by
- * hiding the config). NEVER add PAYSTACK_SECRET_KEY or any other
- * server-only secret to this list.
+ * secret; it's scoped by Firestore Security Rules, not by hiding the
+ * config, and CLOUDINARY_UPLOAD_PRESET is an unsigned preset meant for
+ * client-side use). NEVER add PAYSTACK_SECRET_KEY, CLOUDINARY_API_KEY,
+ * CLOUDINARY_API_SECRET, FIREBASE_SERVICE_ACCOUNT_BASE64, or CRON_SECRET
+ * to this list — those stay server-only, read directly via
+ * process.env inside /api routes.
  * -----------------------------------------------------------------------
  */
 
@@ -20,7 +23,6 @@ const PUBLIC_ENV_KEYS = [
   'FIREBASE_API_KEY',
   'FIREBASE_AUTH_DOMAIN',
   'FIREBASE_PROJECT_ID',
-  'FIREBASE_STORAGE_BUCKET',
   'FIREBASE_MESSAGING_SENDER_ID',
   'FIREBASE_APP_ID',
   'FIREBASE_MEASUREMENT_ID',
@@ -29,6 +31,8 @@ const PUBLIC_ENV_KEYS = [
   'EMAILJS_TEMPLATE_ID',
   'EMAILJS_PUBLIC_KEY',
   'PAYSTACK_PUBLIC_KEY',
+  'CLOUDINARY_CLOUD_NAME',
+  'CLOUDINARY_UPLOAD_PRESET',
   'APP_ENV',
 ];
 

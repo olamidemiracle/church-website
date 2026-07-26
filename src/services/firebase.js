@@ -10,9 +10,14 @@
  * architecture). Bare specifiers like `firebase/app` only resolve with a
  * bundler (Vite/Webpack/etc.), so we import the Firebase SDK directly
  * from Google's official CDN as ES modules instead. If a bundler is
- * introduced later, swap these three import lines for the npm package
+ * introduced later, swap these import lines for the npm package
  * equivalents ('firebase/app', 'firebase/auth', ...) — every other file
- * that imports { app, auth, db, storage } from this module is unaffected.
+ * that imports { app, auth, db } from this module is unaffected.
+ *
+ * NOTE: Firebase Storage is intentionally NOT initialized here — file
+ * storage moved to Cloudinary (see services/storage.service.js) since
+ * Firebase Storage now requires the Blaze billing plan for any usage.
+ * Firestore and Auth remain on Firebase's free Spark plan.
  *
  * Config values come from environment variables (see .env.example),
  * resolved via utils/env.js (import.meta.env or window.__ENV__).
@@ -32,9 +37,6 @@ const { getAuth } = await import(
 const { getFirestore } = await import(
   `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`
 );
-const { getStorage } = await import(
-  `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-storage.js`
-);
 const { initializeAppCheck, ReCaptchaV3Provider } = await import(
   `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app-check.js`
 );
@@ -46,7 +48,6 @@ const firebaseConfig = {
   apiKey: getEnv('FIREBASE_API_KEY'),
   authDomain: getEnv('FIREBASE_AUTH_DOMAIN'),
   projectId: getEnv('FIREBASE_PROJECT_ID'),
-  storageBucket: getEnv('FIREBASE_STORAGE_BUCKET'),
   messagingSenderId: getEnv('FIREBASE_MESSAGING_SENDER_ID'),
   appId: getEnv('FIREBASE_APP_ID'),
   measurementId: getEnv('FIREBASE_MEASUREMENT_ID'),
@@ -58,9 +59,8 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-// App Check — helps prevent abusive traffic from hitting Firestore/Storage
+// App Check — helps prevent abusive traffic from hitting Firestore
 // quotas (see Section 8, Security Rules). Only initialize in the browser.
 let appCheck;
 if (typeof window !== 'undefined') {
@@ -92,4 +92,4 @@ if (typeof window !== 'undefined' && getEnv('FIREBASE_MEASUREMENT_ID')) {
     });
 }
 
-export { app, auth, db, storage, appCheck, analytics };
+export { app, auth, db, appCheck, analytics };

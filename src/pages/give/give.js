@@ -2,11 +2,12 @@
  * pages/give/give.js
  * -----------------------------------------------------------------------
  * Give / Donate page — collects amount + donor info, then opens
- * Paystack's Inline checkout popup. On success, calls the verifyDonation
- * Cloud Function (never trusts the client-side "success" callback alone)
- * before showing a confirmed thank-you message. The Paystack webhook
- * (functions/paystackWebhook.js) remains the durable source of truth
- * regardless of whether this verification call completes.
+ * Paystack's Inline checkout popup. On success, calls the
+ * api/verify-donation.js serverless function (never trusts the
+ * client-side "success" callback alone) before showing a confirmed
+ * thank-you message. The Paystack webhook (api/paystack-webhook.js)
+ * remains the durable source of truth regardless of whether this
+ * verification call completes.
  * -----------------------------------------------------------------------
  */
 

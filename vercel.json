@@ -32,5 +32,9 @@
     { "source": "/testimonies", "destination": "/src/pages/testimonies/index.html" },
     { "source": "/give", "destination": "/src/pages/give/index.html" },
     { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
-  ]
+  ],
+  "crons": [{ "path": "/api/scheduled-backup", "schedule": "0 3 * * *" }],
+  "functions": {
+    "api/scheduled-backup.js": { "maxDuration": 60 }
+  }
 }

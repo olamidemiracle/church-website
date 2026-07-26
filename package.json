@@ -5,8 +5,8 @@
   "description": "Church website — public site + admin dashboard (HTML5, CSS3, Vanilla JS ES6+, Firebase, Vercel)",
   "type": "module",
   "scripts": {
-    "lint": "eslint \"src/**/*.js\" \"functions/**/*.js\"",
-    "lint:fix": "eslint \"src/**/*.js\" \"functions/**/*.js\" --fix",
+    "lint": "eslint \"src/**/*.js\" \"api/**/*.js\"",
+    "lint:fix": "eslint \"src/**/*.js\" \"api/**/*.js\" --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "deploy:preview": "vercel",
@@ -14,11 +14,13 @@
     "bootstrap-admin": "node scripts/bootstrap-admin.cjs",
     "migrate-staging-to-prod": "node scripts/migrate-staging-to-prod.cjs"
   },
+  "dependencies": {
+    "firebase-admin": "^12.3.0"
+  },
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "prettier": "^3.3.0",
-    "firebase-admin": "^12.3.0"
+    "prettier": "^3.3.0"
   },
   "engines": {
     "node": ">=18"
