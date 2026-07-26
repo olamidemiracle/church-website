@@ -606,49 +606,70 @@ repeated, with your Live keys, in Part H.4 when you actually go live.)
 Your website now has an admin dashboard at `/admin/login`, but there's no way to sign
 up through the website itself (that's on purpose — random visitors shouldn't be able
 to create themselves an admin account). This part walks through creating your very
-first admin login, once, by hand.
+first admin login, by hand.
+
+**You'll do steps F.1 through F.4 twice** — once for your **staging** Firebase
+project, once for your **production** Firebase project — the same way you did
+Part B twice. This matters more than it might seem: a service account key (F.2)
+only ever grants access to the _one_ Firebase project you generated it from, so
+staging and production genuinely need their own separate keys, each connected
+to Vercel in its own matching environment. Do staging first.
 
 ### F.1 — Create your first admin user
 
-1. In the Firebase Console (production project), click **Build** → **Authentication**
-   in the left-hand menu.
-2. Click the **Users** tab, then **Add user**.
-3. Type in the email address and a password for your first admin account (this can be
-   your own email). Click **Add user**.
-4. This person can now technically log in, but doesn't have admin permissions yet —
+1. In the Firebase Console, make sure you have the right project selected at the
+   top (`church-website-staging` for your first pass through this Part).
+2. Click **Build** → **Authentication** in the left-hand menu.
+3. Click the **Users** tab, then **Add user**.
+4. Type in the email address and a password for your first admin account (this can be
+   your own email — the same email works fine for both staging and production, they're
+   separate systems). Click **Add user**.
+5. This person can now technically log in, but doesn't have admin permissions yet —
    the next steps fix that.
 
-### F.2 — Download a service account key (used on your own computer AND in Vercel)
+### F.2 — Download a service account key for THIS project
 
-1. In the Firebase Console, click the gear icon → **Project settings**.
+1. Still in this same project, click the gear icon → **Project settings**.
 2. Click the **Service accounts** tab.
 3. Click **Generate new private key**, then confirm.
 4. A `.json` file will download to your computer. **Move this file somewhere safe
    outside your project folder** (e.g. your Desktop or Documents) — never upload
-   this file anywhere or add it to GitHub. It grants full admin access to your
-   Firebase project.
+   this file anywhere or add it to GitHub. It grants full admin access to this
+   specific Firebase project.
+5. Rename it to something you'll recognize later, e.g. `staging-key.json` (or
+   `prod-key.json` on your second pass) — you'll be downloading a second one soon,
+   and it's easy to mix them up otherwise.
 
-### F.3 — Give this key to Vercel too (needed by the admin-related server routes)
+### F.3 — Give this key to Vercel too (scoped to the matching environment only)
 
 A few server-side routes (`api/set-user-role.js`, `api/delete-media.js`,
-`api/scheduled-backup.js`) need this same key to manage users and read your
-database from Vercel's servers. Vercel environment variables are plain text
-boxes, so the key needs to be squeezed onto one line first:
+`api/scheduled-backup.js`) need this key to manage users and read your database
+from Vercel's servers. Vercel environment variables are plain text boxes, so the
+key needs to be squeezed onto one line first:
 
 1. Open Terminal, and run one of these (whichever matches your computer) to
    base64-encode the file — replacing the path with wherever you saved it in F.2:
-   - **Mac/Linux**: `base64 -i /path/to/your-key.json | pbcopy` (this copies the
+   - **Mac/Linux**: `base64 -i /path/to/staging-key.json | pbcopy` (this copies the
      result straight to your clipboard)
    - **Windows (PowerShell)**:
-     `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\your-key.json")) | Set-Clipboard`
+     `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\staging-key.json")) | Set-Clipboard`
 2. Go to your Vercel project → **Settings** → **Environment Variables**.
 3. Add a new variable named `FIREBASE_SERVICE_ACCOUNT_BASE64`, paste the copied
-   value, check **all three** environment boxes (Production, Preview,
-   Development), and leave **Sensitive off** (same reasoning as every other
-   variable in this guide — this key is read only inside `/api` routes via
-   `process.env`, and is never added to `api/env.js`'s public list, so it never
-   reaches the browser).
-4. Click **Save**.
+   value, and check **only the boxes matching which project's key this is**:
+   - If this is your **staging** key (your first pass through Part F): check
+     **Preview** and **Development** only.
+   - If this is your **production** key (your second pass): check **Production**
+     only.
+
+   **Never check all three for a single key** — since Preview/Development are
+   meant to talk to staging, and Production is meant to talk to production, a
+   key checked into the wrong box would make those server routes quietly read
+   and write to the wrong database.
+
+4. Leave **Sensitive off** (same reasoning as every other variable in this guide
+   — this key is read only inside `/api` routes via `process.env`, and is never
+   added to `api/env.js`'s public list, so it never reaches the browser).
+5. Click **Save**.
 
 ### F.4 — Run the bootstrap script to make that user a superadmin
 
@@ -659,7 +680,7 @@ boxes, so the key needs to be squeezed onto one line first:
 2. Now type the following, replacing the file path with wherever you saved the
    `.json` key in step F.2, and the email with the one you used in step F.1:
    ```
-   npm run bootstrap-admin -- /path/to/your-key.json admin@yourchurch.org
+   npm run bootstrap-admin -- /path/to/staging-key.json admin@yourchurch.org
    ```
    (On Mac, you can drag the `.json` file from Finder into the Terminal window right
    after typing `bootstrap-admin -- ` to fill in its exact path automatically.)
@@ -669,18 +690,33 @@ boxes, so the key needs to be squeezed onto one line first:
    copy inside Vercel from F.3 stays there safely — this is just about the loose
    file on your own computer.)
 
-### F.5 — Log in
+### F.5 — Repeat F.1 through F.4 for your OTHER Firebase project
 
-1. Go to `https://yoursite.vercel.app/admin/login` (or your real domain once
-   connected).
-2. Enter the email and password from step F.1.
-3. You should land on the Admin Dashboard, showing counts of new prayer requests,
+If you just finished staging, switch to your `church-website-prod` project at the
+top of the Firebase Console and do F.1 through F.4 again — new admin user, new
+downloaded key (name it `prod-key.json` this time), added to Vercel under
+**Production only**, then run the bootstrap script again pointing at that new key.
+
+You should end up with:
+
+- Two admin user logins (one per Firebase project — they can share the same
+  email/password if you like, or be different)
+- Two rows for `FIREBASE_SERVICE_ACCOUNT_BASE64` in Vercel, one scoped to
+  Preview+Development, one scoped to Production
+
+### F.6 — Log in
+
+1. For staging: go to your `.vercel.app` preview URL (or run `vercel dev` and use
+   `localhost:3000`), then `/admin/login`.
+2. For production: go to your real production URL, then `/admin/login`.
+3. Enter the matching email and password for whichever environment you're testing.
+4. You should land on the Admin Dashboard, showing counts of new prayer requests,
    pending membership applications, unread messages, and testimonies awaiting
    review.
 
 Future admin/editor accounts (for other staff) should be created through the
 **Manage Users** page once it's built, rather than repeating this bootstrap process —
-this script is only meant for creating that very first account.
+this script is only meant for creating that very first account per project.
 
 ---
 
@@ -895,9 +931,9 @@ firebase deploy --only firestore:rules,firestore:indexes
 
 ### H.6 — Create your production admin login
 
-If you haven't already, repeat Part F entirely against your **production**
-Firebase project (a staging login does not work on production — they're
-completely separate user systems).
+If you only did Part F once so far, make sure you've completed F.1 through F.4
+for your **production** Firebase project too (F.5 covers this) — a staging
+login does not work on production, they're completely separate user systems.
 
 ### H.7 — Confirm scheduled backups are running
 
@@ -983,11 +1019,14 @@ Go through this list and check off each box as you complete it:
 - [ ] Webhook URL noted (stable once a real domain is connected) and pasted into
       Paystack Dashboard settings
 - [ ] Test donation completed and confirmed in staging's `donations` collection
-- [ ] First admin user created in Firebase Authentication
-- [ ] Service account key downloaded, base64-encoded, and added to Vercel as
-      `FIREBASE_SERVICE_ACCOUNT_BASE64`
-- [ ] Bootstrap script run successfully to create the first superadmin
-- [ ] Service account key file deleted or moved somewhere private afterward
+- [ ] First admin user created in Firebase Authentication (staging AND production)
+- [ ] Service account key downloaded for staging, base64-encoded, and added to
+      Vercel as `FIREBASE_SERVICE_ACCOUNT_BASE64` under Preview + Development
+- [ ] Service account key downloaded for production, base64-encoded, and added to
+      Vercel as `FIREBASE_SERVICE_ACCOUNT_BASE64` under Production only
+- [ ] Bootstrap script run successfully for both staging and production, creating
+      the first superadmin in each
+- [ ] Both service account key files deleted or moved somewhere private afterward
 - [ ] Successfully logged in at `/admin/login` and saw the Dashboard
 - [ ] Tested the whole site locally with `vercel dev` against staging
 - [ ] Confirmed test form submissions appeared correctly in staging's Firestore
