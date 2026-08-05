@@ -31,7 +31,8 @@
     { "source": "/visit", "destination": "/src/pages/visit/index.html" },
     { "source": "/testimonies", "destination": "/src/pages/testimonies/index.html" },
     { "source": "/give", "destination": "/src/pages/give/index.html" },
-    { "source": "/admin/:path*", "destination": "/src/admin/index.html" }
+    { "source": "/admin/:path*", "destination": "/src/admin/index.html" },
+    { "source": "/:asset*\\.(png|svg|ico|jpg|jpeg|css|js|json)", "destination": "/:asset*.$1" }
   ],
   "crons": [{ "path": "/api/scheduled-backup", "schedule": "0 3 * * *" }],
   "functions": {
