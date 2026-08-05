@@ -80,9 +80,8 @@ export function renderHeader() {
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header" id="site-header-el">
       <div class="container site-header__inner">
-        <a href="/" class="site-logo" aria-label="Go to homepage">
-          <span class="site-logo__mark" aria-hidden="true">✚</span>
-          <span class="site-logo__text" id="site-logo-text">Church</span>
+        <a href="/" class="site-logo" aria-label="Petals Global Church — Go to homepage">
+          <img src="/src/assets/logo.png" alt="Petals Global Church" class="site-logo__image" id="site-logo-image" />
         </a>
 
         <nav class="site-nav" aria-label="Primary">

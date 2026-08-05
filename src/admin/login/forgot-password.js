@@ -19,7 +19,7 @@ export function renderForgotPassword(root) {
   root.innerHTML = `
     <div class="auth-page">
       <div class="auth-card">
-        <div class="auth-card__brand"><span aria-hidden="true">✚</span> Admin</div>
+        <div class="auth-card__brand"><img src="/favicon.png" alt="" width="28" height="28" /> Admin</div>
         <h1>Reset Your Password</h1>
         <p class="auth-card__subtitle">
           Enter your admin email and we'll send you a link to reset your password.

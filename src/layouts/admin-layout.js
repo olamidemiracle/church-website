@@ -73,7 +73,7 @@ export function renderAdminLayout(root, { activePath, user, role, contentHTML })
 
       <aside class="admin-sidebar" id="admin-sidebar">
         <div class="admin-sidebar__brand">
-          <span aria-hidden="true">✚</span> Admin
+          <img src="/favicon.png" alt="" width="24" height="24" /> Admin
         </div>
         <nav class="admin-nav">
           ${NAV_SECTIONS.map((section) => renderNavSection(section, activePath, role)).join('')}

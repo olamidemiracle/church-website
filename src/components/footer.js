@@ -14,7 +14,7 @@ import { escapeHTML } from '../utils/dom-helpers.js';
 const CURRENT_YEAR = new Date().getFullYear();
 
 export function renderFooter(settings = {}) {
-  const churchName = escapeHTML(settings.churchName || 'Church Name');
+  const churchName = escapeHTML(settings.churchName || 'Petals Global Church');
   const address = escapeHTML(settings.address || '');
   const phone = escapeHTML(settings.phone || '');
   const email = escapeHTML(settings.email || '');
@@ -23,9 +23,8 @@ export function renderFooter(settings = {}) {
     <footer class="site-footer">
       <div class="container site-footer__grid">
         <div class="site-footer__about">
-          <a href="/" class="site-logo site-logo--footer" aria-label="Go to homepage">
-            <span class="site-logo__mark" aria-hidden="true">✚</span>
-            <span class="site-logo__text">${churchName}</span>
+          <a href="/" class="site-logo site-logo--footer" aria-label="Petals Global Church — Go to homepage">
+            <img src="/src/assets/logo.png" alt="Petals Global Church" class="site-logo__image" />
           </a>
           <p class="text-sm site-footer__tagline">
             A community built on faith, hope, and love — for every generation.

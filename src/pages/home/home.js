@@ -14,7 +14,7 @@ import { injectStructuredData } from '../../utils/structured-data.js';
 import { escapeHTML, qs } from '../../utils/dom-helpers.js';
 
 setPageMeta({
-  title: 'Home | Church',
+  title: 'Home | Petals Global Church',
   description: 'Welcome home. Join us for worship, community, and growth.',
 });
 
@@ -34,7 +34,7 @@ function renderStructuredData(settings) {
   injectStructuredData({
     '@context': 'https://schema.org',
     '@type': 'Church',
-    name: settings.churchName || undefined,
+    name: settings.churchName || 'Petals Global Church',
     address: settings.address || undefined,
     telephone: settings.phone || undefined,
     email: settings.email || undefined,

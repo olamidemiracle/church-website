@@ -13,7 +13,7 @@ import { renderInto } from '../../utils/dom-helpers.js';
 import { setPageMeta } from '../../utils/seo.js';
 
 setPageMeta({
-  title: 'About Church',
+  title: 'About Petals Global Church',
   description: 'Learn who we are, what we believe, and who leads our church family.',
 });
 

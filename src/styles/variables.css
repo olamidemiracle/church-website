@@ -15,22 +15,26 @@
      generic "brand orange."
      --------------------------------------------------------------------- */
 
-  /* Primary — Ink Blue: headers, nav, primary buttons, footer */
-  --color-primary-900: #0f1b2d;
-  --color-primary-700: #1c3352;
-  --color-primary-500: #2c4c73;
-  --color-primary-300: #6f8caa;
-  --color-primary-100: #dbe4ee;
+  /* Primary — Ember Red: headers, nav, primary buttons, footer.
+     Sampled from the Petals Global Church logo's flame base / wordmark
+     red (~#ED0609), deepened for large-surface use (nav bars, footer)
+     where the logo's full brightness would be visually harsh. */
+  --color-primary-900: #450a0a;
+  --color-primary-700: #7a1315;
+  --color-primary-500: #c2202b;
+  --color-primary-300: #e9989b;
+  --color-primary-100: #fbe6e6;
 
   /* Secondary — Slate: supporting UI, secondary buttons, borders on dark */
   --color-secondary-700: #3d4652;
   --color-secondary-500: #6b7480;
   --color-secondary-300: #a9b0b8;
 
-  /* Accent — Brass: used sparingly for CTAs (Give, Join, Submit, links) */
-  --color-accent-700: #8a6a2f;
-  --color-accent-500: #b98f3f;
-  --color-accent-300: #e0c07f;
+  /* Accent — Flame Gold: sampled from the top of the logo's flame
+     (~#F2900A), used sparingly for CTAs (Give, Join, Submit, links) */
+  --color-accent-700: #b36a08;
+  --color-accent-500: #f2900a;
+  --color-accent-300: #ffd98a;
 
   /* Neutrals — a cool paper tone, distinct from the common warm-cream default */
   --color-bg: #f6f7f8;

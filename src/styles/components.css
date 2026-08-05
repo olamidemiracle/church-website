@@ -54,16 +54,17 @@
 .site-logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-display);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-lg);
-  color: var(--color-primary-900);
   margin-right: auto;
 }
-.site-logo__mark {
-  color: var(--color-accent-500);
-  font-size: var(--font-size-xl);
+.site-logo__image {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+@media (min-width: 1024px) {
+  .site-logo__image {
+    height: 48px;
+  }
 }
 
 .site-nav {
@@ -699,7 +700,9 @@ body.nav-open {
   }
 }
 .site-logo--footer {
-  color: var(--color-text-inverse);
+  background-color: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
 }
 .site-footer__tagline {
   margin-top: var(--space-3);

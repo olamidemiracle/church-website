@@ -21,7 +21,7 @@ export function renderLogin(root) {
   root.innerHTML = `
     <div class="auth-page">
       <div class="auth-card">
-        <div class="auth-card__brand"><span aria-hidden="true">✚</span> Admin Login</div>
+        <div class="auth-card__brand"><img src="/favicon.png" alt="" width="28" height="28" /> Admin Login</div>
         <h1>Sign In</h1>
         <p class="auth-card__subtitle">Enter your admin credentials to continue.</p>
 

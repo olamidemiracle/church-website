@@ -1,6 +1,6 @@
 {
   "projects": {
-    "staging": "REPLACE_WITH_church-website-staging_PROJECT_ID",
-    "production": "REPLACE_WITH_church-website-prod_PROJECT_ID"
+    "staging": "church-website-staging-2cb4e",
+    "production": "church-website-prod"
   }
 }

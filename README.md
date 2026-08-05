@@ -78,12 +78,12 @@ Cloudinary free tier) is billing-free.
   Detail, `NewsArticle` on News Detail).
 - **Accessibility**: a skip-to-content link (visible on keyboard focus) on
   every public page.
-- **Favicon & theme color**: `favicon.svg` linked site-wide, plus a
+- **Favicon & theme color**: `favicon.png` linked site-wide, plus a
   `theme-color` meta tag matching the design tokens' ink-blue primary.
 - **Custom 404 page**: `404.html` at the repository root (not nested — this
   exact name/location is a Vercel convention that serves it automatically,
   with a correct HTTP 404 status, for any unmatched route).
-- **⚠️ `favicon.svg`, `robots.txt`, and `sitemap.xml` live at the repository
+- **⚠️ `favicon.png`, `robots.txt`, and `sitemap.xml` live at the repository
   ROOT, not inside a `public/` folder.** This is deliberate: Vercel's
   zero-config static builder treats a `public/` directory as the site's
   Output Directory _if one exists_ — meaning every route (including `/`

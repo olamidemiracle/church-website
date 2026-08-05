@@ -43,10 +43,13 @@ export async function mountPublicLayout() {
 
   renderInto('#site-footer', renderFooter(settings || {}));
 
-  // Update the header's logo text once we know the real church name.
-  const logoText = document.getElementById('site-logo-text');
-  if (logoText && settings?.churchName) {
-    logoText.textContent = settings.churchName;
+  // The logo image itself always shows "Petals Global Church" (baked into
+  // the graphic), but keep its alt text in sync with settings/general in
+  // case the church name is ever updated there - a screen reader user
+  // should hear the current name even if the image asset lags behind.
+  const logoImage = document.getElementById('site-logo-image');
+  if (logoImage && settings?.churchName) {
+    logoImage.alt = settings.churchName;
   }
 
   return settings;
