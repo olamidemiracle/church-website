@@ -6,20 +6,20 @@
       <stop offset="100%" stop-color="#2d0707" stop-opacity="1"/>
     </radialGradient>
 
-    <radialGradient id="flameCore" cx="50%" cy="100%" r="70%">
-      <stop offset="0%" stop-color="#ffd98a" stop-opacity="0.55"/>
-      <stop offset="30%" stop-color="#f2900a" stop-opacity="0.35"/>
-      <stop offset="65%" stop-color="#b36a08" stop-opacity="0.12"/>
+    <radialGradient id="flameCore" cx="50%" cy="100%" r="75%">
+      <stop offset="0%" stop-color="#ffd98a" stop-opacity="0.85"/>
+      <stop offset="30%" stop-color="#f2900a" stop-opacity="0.6"/>
+      <stop offset="65%" stop-color="#b36a08" stop-opacity="0.25"/>
       <stop offset="100%" stop-color="#b36a08" stop-opacity="0"/>
     </radialGradient>
 
     <radialGradient id="emberLeft" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#c2202b" stop-opacity="0.35"/>
+      <stop offset="0%" stop-color="#c2202b" stop-opacity="0.55"/>
       <stop offset="100%" stop-color="#c2202b" stop-opacity="0"/>
     </radialGradient>
 
     <radialGradient id="emberRight" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#f2900a" stop-opacity="0.25"/>
+      <stop offset="0%" stop-color="#f2900a" stop-opacity="0.45"/>
       <stop offset="100%" stop-color="#f2900a" stop-opacity="0"/>
     </radialGradient>
 
@@ -44,7 +44,7 @@
   <circle cx="1680" cy="360" r="480" fill="url(#emberRight)" filter="url(#softBlur)"/>
 
   <!-- Rising light rays -->
-  <g opacity="0.16" filter="url(#softBlurSmall)">
+  <g opacity="0.28" filter="url(#softBlurSmall)">
     <path d="M 860 1080 L 760 -100 L 900 -100 Z" fill="#ffd98a"/>
     <path d="M 1010 1080 L 960 -100 L 1120 -100 Z" fill="#f2900a"/>
     <path d="M 1180 1080 L 1180 -100 L 1320 -100 Z" fill="#ffd98a"/>
@@ -62,7 +62,7 @@
              C 1220 640 1220 800 1120 920
              C 1180 880 1210 820 1210 760
              C 1260 880 1200 1000 1080 1080
-             Z" fill="#f2900a" opacity="0.5"/>
+             Z" fill="#f2900a" opacity="0.8"/>
   </g>
 
   <!-- Warm core glow behind hero copy -->
