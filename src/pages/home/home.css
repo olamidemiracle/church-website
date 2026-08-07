@@ -7,7 +7,7 @@
    gradient) is layered over the image to keep hero text legible. */
 .hero--home {
   background-image:
-    linear-gradient(160deg, rgba(69, 10, 10, 0.6), rgba(122, 19, 21, 0.5)),
+    linear-gradient(160deg, rgba(45, 7, 7, 0.45), rgba(122, 19, 21, 0.32)),
     url('/src/images/hero-photo.jpg');
   background-size: cover;
   background-position: center 35%;
@@ -15,6 +15,11 @@
   min-height: 88vh;
   display: flex;
   align-items: center;
+}
+.page-home .hero--home .hero__eyebrow,
+.page-home .hero--home .hero__title,
+.page-home .hero--home .hero__subtitle {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 @media (max-width: 640px) {
   .hero--home {
