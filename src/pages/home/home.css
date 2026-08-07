@@ -22,6 +22,40 @@
   }
 }
 
+/* Transparent overlay header — home page only. Header sits on top of the
+   hero photo (like the "immersive" nav pattern) until the user scrolls,
+   at which point the existing .is-scrolled state (already wired up in
+   header.js) switches it back to a normal solid sticky bar. Other pages
+   are untouched since this is scoped under .page-home. */
+.page-home .site-header {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+.page-home .site-header.is-scrolled {
+  position: sticky;
+  background-color: var(--color-surface);
+}
+.page-home .site-header:not(.is-scrolled) .site-logo {
+  background-color: rgba(255, 255, 255, 0.92);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+.page-home .site-header:not(.is-scrolled) .nav-link,
+.page-home .site-header:not(.is-scrolled) .nav-submenu-toggle {
+  color: var(--color-text-inverse);
+}
+.page-home .site-header:not(.is-scrolled) .nav-link:hover,
+.page-home .site-header:not(.is-scrolled) .nav-submenu-toggle:hover,
+.page-home .site-header:not(.is-scrolled) .nav-link.is-active {
+  color: var(--color-accent-300);
+}
+.page-home .site-header:not(.is-scrolled) .mobile-nav-toggle__bar {
+  background-color: var(--color-text-inverse);
+}
+
 .service-snapshot {
   display: grid;
   grid-template-columns: 1fr;
