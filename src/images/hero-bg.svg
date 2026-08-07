@@ -1,0 +1,81 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="">
+  <defs>
+    <radialGradient id="baseGlow" cx="50%" cy="115%" r="95%">
+      <stop offset="0%" stop-color="#7a1315" stop-opacity="1"/>
+      <stop offset="55%" stop-color="#5a0f10" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#2d0707" stop-opacity="1"/>
+    </radialGradient>
+
+    <radialGradient id="flameCore" cx="50%" cy="100%" r="70%">
+      <stop offset="0%" stop-color="#ffd98a" stop-opacity="0.55"/>
+      <stop offset="30%" stop-color="#f2900a" stop-opacity="0.35"/>
+      <stop offset="65%" stop-color="#b36a08" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#b36a08" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="emberLeft" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c2202b" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#c2202b" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="emberRight" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f2900a" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#f2900a" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="vignetteTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2d0707" stop-opacity="0.9"/>
+      <stop offset="35%" stop-color="#2d0707" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+    <filter id="softBlurSmall" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <!-- Base -->
+  <rect width="1920" height="1080" fill="url(#baseGlow)"/>
+
+  <!-- Ambient side embers -->
+  <circle cx="260" cy="420" r="420" fill="url(#emberLeft)" filter="url(#softBlur)"/>
+  <circle cx="1680" cy="360" r="480" fill="url(#emberRight)" filter="url(#softBlur)"/>
+
+  <!-- Rising light rays -->
+  <g opacity="0.16" filter="url(#softBlurSmall)">
+    <path d="M 860 1080 L 760 -100 L 900 -100 Z" fill="#ffd98a"/>
+    <path d="M 1010 1080 L 960 -100 L 1120 -100 Z" fill="#f2900a"/>
+    <path d="M 1180 1080 L 1180 -100 L 1320 -100 Z" fill="#ffd98a"/>
+    <path d="M 640 1080 L 560 -100 L 700 -100 Z" fill="#f2900a"/>
+  </g>
+
+  <!-- Flame silhouette, abstract, bottom-center -->
+  <g filter="url(#softBlur)">
+    <path d="M 960 1080
+             C 860 900 840 760 900 640
+             C 930 580 900 520 940 460
+             C 960 560 1010 560 1030 480
+             C 1060 580 1120 640 1080 760
+             C 1150 700 1160 620 1130 540
+             C 1220 640 1220 800 1120 920
+             C 1180 880 1210 820 1210 760
+             C 1260 880 1200 1000 1080 1080
+             Z" fill="#f2900a" opacity="0.5"/>
+  </g>
+
+  <!-- Warm core glow behind hero copy -->
+  <rect width="1920" height="1080" fill="url(#flameCore)"/>
+
+  <!-- Subtle top vignette for header legibility -->
+  <rect width="1920" height="1080" fill="url(#vignetteTop)"/>
+
+  <!-- Fine grain / stained-glass facets for texture -->
+  <g opacity="0.05" stroke="#ffd98a" stroke-width="1">
+    <line x1="0" y1="180" x2="1920" y2="60"/>
+    <line x1="0" y1="380" x2="1920" y2="300"/>
+    <line x1="0" y1="620" x2="1920" y2="700"/>
+    <line x1="0" y1="880" x2="1920" y2="960"/>
+  </g>
+</svg>

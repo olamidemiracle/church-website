@@ -1,6 +1,19 @@
 /* Home page — styles unique to this page only. Shared component styles
    (hero, card-grid, entity-card, etc.) live in styles/components.css. */
 
+/* Home hero background — scoped to .hero--home only, so /visit and /give
+   (which also use the shared .hero class) are untouched. The dark gradient
+   overlay (matching the site's existing 160deg primary-900→700 hero
+   gradient) is layered over the image to keep hero text legible. */
+.hero--home {
+  background-image:
+    linear-gradient(160deg, rgba(69, 10, 10, 0.88), rgba(122, 19, 21, 0.8)),
+    url('/src/images/hero-bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .service-snapshot {
   display: grid;
   grid-template-columns: 1fr;
