@@ -106,6 +106,11 @@
 .nav-submenu-toggle[aria-expanded='true'] .nav-caret {
   transform: rotate(180deg);
 }
+@media (hover: hover) and (pointer: fine) {
+  .nav-item--has-submenu:hover .nav-caret {
+    transform: rotate(180deg);
+  }
+}
 
 .nav-submenu {
   position: absolute;
@@ -123,6 +128,14 @@
 }
 .nav-item--has-submenu .nav-submenu-toggle[aria-expanded='true'] + .nav-submenu {
   display: flex;
+}
+/* Desktop/mouse: open on hover, no click required. Touchscreens (which
+   don't have real hover) fall back to the existing click/tap behavior
+   above, so mobile still works the same as before. */
+@media (hover: hover) and (pointer: fine) {
+  .nav-item--has-submenu:hover .nav-submenu {
+    display: flex;
+  }
 }
 .nav-submenu-link {
   display: block;
