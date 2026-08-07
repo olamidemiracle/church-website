@@ -12,6 +12,14 @@
   background-size: cover;
   background-position: center 35%;
   background-repeat: no-repeat;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 640px) {
+  .hero--home {
+    min-height: 70vh;
+  }
 }
 
 .service-snapshot {
