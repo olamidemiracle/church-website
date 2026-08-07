@@ -18,6 +18,42 @@ setPageMeta({
   description: 'Welcome home. Join us for worship, community, and growth.',
 });
 
+/**
+ * Placeholder content shown ONLY when Firestore has no real data yet
+ * (empty serviceTimes[] / empty `ministries` collection). The moment real
+ * entries are added via the admin panel, this is bypassed automatically —
+ * see the `.length === 0` checks below. Safe to leave in; it just makes
+ * demos/client walkthroughs look finished instead of empty before real
+ * content is entered.
+ */
+const PLACEHOLDER_SERVICE_TIMES = [
+  { day: 'Sunday', time: '9:00 AM', label: 'First Service' },
+  { day: 'Sunday', time: '11:00 AM', label: 'Second Service' },
+  { day: 'Wednesday', time: '6:00 PM', label: 'Bible Study' },
+  { day: 'Friday', time: '6:30 PM', label: 'Prayer Meeting' },
+];
+
+const PLACEHOLDER_MINISTRIES = [
+  {
+    name: 'Worship & Music',
+    description:
+      'Leading the congregation into God\u2019s presence through song, sound, and heartfelt praise every service.',
+    slug: 'worship-music',
+  },
+  {
+    name: 'Youth Ministry',
+    description:
+      'A vibrant space for teens and young adults to grow in faith, friendship, and purpose together.',
+    slug: 'youth-ministry',
+  },
+  {
+    name: 'Outreach & Missions',
+    description:
+      'Serving our community and beyond with practical love, food drives, and mission partnerships.',
+    slug: 'outreach-missions',
+  },
+];
+
 async function init() {
   const settings = await mountPublicLayout();
   renderStructuredData(settings);
@@ -50,17 +86,10 @@ function renderServiceSnapshot(settings) {
   }
 
   const serviceTimes = Array.isArray(settings?.serviceTimes) ? settings.serviceTimes : [];
+  const isPlaceholder = serviceTimes.length === 0;
+  const items = isPlaceholder ? PLACEHOLDER_SERVICE_TIMES : serviceTimes;
 
-  if (serviceTimes.length === 0) {
-    target.innerHTML = `
-      <p class="state-message">
-        Service time details are coming soon. In the meantime,
-        <a href="/contact">contact us</a> for this week's schedule.
-      </p>`;
-    return;
-  }
-
-  target.innerHTML = serviceTimes
+  target.innerHTML = items
     .slice(0, 4)
     .map(
       (service) => `
@@ -71,6 +100,13 @@ function renderServiceSnapshot(settings) {
         </div>`
     )
     .join('');
+
+  if (isPlaceholder) {
+    // eslint-disable-next-line no-console
+    console.info(
+      '[home] Showing placeholder service times — add real ones in Admin \u2192 Settings \u2192 Service Times.'
+    );
+  }
 }
 
 /** Renders the first 3 ministries (by `order` field) as preview cards. */
@@ -87,7 +123,11 @@ async function renderMinistriesPreview() {
     });
 
     if (ministries.length === 0) {
-      target.innerHTML = `<p class="state-message">Ministries will be listed here soon.</p>`;
+      target.innerHTML = PLACEHOLDER_MINISTRIES.map(renderMinistryCard).join('');
+      // eslint-disable-next-line no-console
+      console.info(
+        '[home] Showing placeholder ministries — add real ones in Admin \u2192 Ministries.'
+      );
       return;
     }
 
